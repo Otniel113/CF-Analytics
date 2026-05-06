@@ -7,7 +7,7 @@ Dashboard analitik lengkap untuk Comifuro (CF) mulai dari tabel master, visualis
 Proyek ini terbagi menjadi dua bagian utama:
 
 - **[notebooks/](notebooks/)**: Berisi file-file untuk analisis awal (*early analytics*), pembuatan model machine learning, eksplorasi data, dan eksperimen lainnya menggunakan Jupyter Notebook / Google Collab yang diubah menjadi script Python (.py).
-- **[cf-analytics/](cf-analytics/)**: Berisi aplikasi dashboard utama yang siap digunakan. Untuk detail teknis dan juga keterangan atau deskripsinya bisa dilihat pada [cf-analytics/](cf-analytics/README.md)
+- **[cf-analytics/](cf-analytics/)**: Berisi aplikasi dashboard utama yang siap digunakan.
 
 ## Fitur
 

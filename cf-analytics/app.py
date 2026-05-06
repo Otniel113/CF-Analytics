@@ -75,7 +75,7 @@ def filter_data(search, sells, links, fandoms, circle_type, rating, day, cf_vers
         filtered_df = filtered_df[filtered_df[sell_item] == True]
         
     for link_item in links:
-        filtered_df = filtered_df[filtered_df[link_item].notna()]
+        filtered_df = filtered_df[filtered_df[link_item].notna() & (filtered_df[link_item].astype(str).str.strip() != "-")]
         
     for fandom_item in fandoms:
         filtered_df = filtered_df[filtered_df[fandom_item] == True]

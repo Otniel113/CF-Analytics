@@ -50,17 +50,17 @@ hoyoverse_keywords = [
 ]
 
 vtuber_keywords = [
-    "vtuber", "virtual youtuber", "hololive", "nijisanji", "vshojo", "v-tuber"
+    "vtuber", "virtual youtuber", "hololive", "nijisanji", "vshojo", "v-tuber", "holo"
 ]
 
 gacha_keywords = [
     "arknight", "arknights", "blue archive", "bluearchive", "blue archieve",
-    "reverse 1999", "reverse1999", "reverse:1999", "wuthering wave", "wuthering waves", "wuwa",
+    "reverse 1999", "reverse1999", "reverse:1999", "reverse: 1999" "wuthering wave", "wuthering waves", "wuwa",
     "pgr", "punishing gray raven", "punishing grey raven",
-    "love and deepspace", "love & deepspace", "limbus company", "limbuscompany",
+    "love and deepspace", "love & deepspace", "limbus company", "limbuscompany", "love and deep space"
     "aether gazer", "aethergazer", "fgo", "fate grand order", "fate/grand order",
     "nikke", "goddess of victory", "uma musume", "umamusume",
-    "endfield", "azur lane", "azurlane", "neverness to everness", "nte", "lads", "lad", "azur"
+    "endfield", "azur lane", "azurlane", "neverness to everness", "nte", "lads", "lad", "azur", "gacha", "gacha game", "gacha games"
 ]
 
 vsynth_keywords = [
@@ -71,27 +71,31 @@ vsynth_keywords = [
 
 original_keywords = [
     "original", "original work", "original works", "original art",
-    "original ip", "original character", "originals", "original design", "oc"
+    "original ip", "original character", "originals", "original design", "oc", "ori"
 ]
 
-# Function to check for keyword presence in a string (case-insensitive and allowing for slight variations)
+# Function to check for keyword presence with special handling for short tags
 def contains_keyword(fandom_text, keywords, is_exact_oc=False):
     if pd.isna(fandom_text):
         return False
+
     text = str(fandom_text).lower()
     for keyword in keywords:
-        if keyword == "oc" and is_exact_oc:
-            pattern = r'\boc\b'
+        # If it's a short tag and we want exact matching, use word boundaries
+        if is_exact_oc and keyword in ["oc", "ori"]:
+            pattern = rf'\b{re.escape(keyword)}\b'
         else:
+            # Otherwise, allow flexible spacing between words in the keyword
             pattern = r'\s*'.join(re.escape(word) for word in keyword.split())
+
         if re.search(pattern, text):
             return True
     return False
 
 # Apply unified mappings
 def categorize_booth(row):
-    fandom = row['fandom']
-    other_fandom = row.get('other_fandom', '')
+    fandom = str(row['fandom'])
+    other_fandom = str(row.get('other_fandom', ''))
 
     is_hoyo = contains_keyword(fandom, hoyoverse_keywords) or contains_keyword(other_fandom, hoyoverse_keywords)
     is_vtuber = contains_keyword(fandom, vtuber_keywords) or contains_keyword(other_fandom, vtuber_keywords)
@@ -99,7 +103,13 @@ def categorize_booth(row):
     is_vsynth = contains_keyword(fandom, vsynth_keywords) or contains_keyword(other_fandom, vsynth_keywords)
     is_orig = contains_keyword(fandom, original_keywords, is_exact_oc=True) or contains_keyword(other_fandom, original_keywords, is_exact_oc=True)
 
-    is_other = not any([is_hoyo, is_vtuber, is_gacha, is_vsynth, is_orig])
+    # Check if any category is matched
+    matched_any = any([is_hoyo, is_vtuber, is_gacha, is_vsynth, is_orig])
+
+    # is_other is true if no category matches AND it's not the case that both are just dashes
+    # This allows inclusion if at least one field has non-dash content
+    is_both_dash = fandom.strip() == "-" and other_fandom.strip() == "-"
+    is_other = not matched_any and not is_both_dash
 
     return pd.Series([
         is_hoyo, is_vtuber, is_gacha, is_vsynth, is_orig, is_other
@@ -107,7 +117,7 @@ def categorize_booth(row):
 
 df_cf[['Hoyoverse', 'Vtuber', 'Other Gacha', 'V-Synth', 'Original', 'Other (Niche)']] = df_cf.apply(categorize_booth, axis=1)
 
-# df_cf[['name', 'fandom', 'other_fandom', 'Hoyoverse', 'Vtuber', 'Other Gacha', 'V-Synth', 'Original', 'Other (Niche)', 'CF_Version']].sample(20)
+# df_cf[['name', 'fandom', 'other_fandom', 'Hoyoverse', 'Vtuber', 'Other Gacha', 'V-Synth', 'Original', 'Other (Niche)', 'CF_Version']].sample(15)
 
 # Fandom Comparison DataFrame
 summary_data_fandom = []
@@ -241,8 +251,8 @@ fig, axes = plt.subplots(2, 1, figsize=(12, 12))
 
 for i, cf_ver in enumerate([21, 22]):
     subset = df_cf[df_cf['CF_Version'] == cf_ver]
-    # Calculate counts and sort descending
-    counts = subset[link_cols].notnull().sum().sort_values(ascending=True)
+    # Calculate counts: check if not null AND not equal to "-"
+    counts = subset[link_cols].apply(lambda col: (col.notnull() & (col.astype(str).str.strip() != "-")).sum()).sort_values(ascending=True)
 
     counts.plot(kind='barh', ax=axes[i], color='#3b82f6' if cf_ver == 22 else '#94a3b8')
     axes[i].set_title(f'Count of Circles Providing Specific Links (CF{cf_ver})', fontsize=14)
