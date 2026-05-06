@@ -1,20 +1,19 @@
 # CF-Analytics
 
-Dashboard analitik lengkap untuk Comifuro mulai dari tabel master, visualisasi data, implementasi machine learning data science, sampai chatbot LLM.
+Dashboard analitik lengkap untuk Comifuro (CF) mulai dari tabel master, visualisasi data, implementasi machine learning data science, sampai chatbot LLM.
 
 ## Struktur Project
 
-### [notebooks/](notebooks/)
-Berisi notebook dan skrip untuk tahapan awal analisis data (Exploratory Data Analysis) dan pembangunan model.
-- [01_CF_EDA.py](notebooks/01_CF_EDA.py): Skrip analisis eksplorasi data Comifuro.
-- [cf21-catalog.json](notebooks/cf21-catalog.json), [cf22-catalog.json](notebooks/cf22-catalog.json): Data mentah katalog Comifuro.
-- `df_cf.pkl`: Data yang telah diproses untuk analisis lebih lanjut.
+Proyek ini terbagi menjadi dua bagian utama:
 
-### cf-analytics
-Aplikasi dashboard interaktif (*Coming Soon*).
+- **[notebooks/](notebooks/)**: Berisi file-file untuk analisis awal (*early analytics*), pembuatan model machine learning, eksplorasi data, dan eksperimen lainnya menggunakan Jupyter Notebook / Google Collab yang diubah menjadi script Python (.py).
+- **[cf-analytics/](cf-analytics/)**: Berisi aplikasi dashboard utama yang siap digunakan. Untuk detail teknis dan juga keterangan atau deskripsinya bisa dilihat pada [cf-analytics/](cf-analytics/README.md)
 
-## Progress & Fitur
-- [x] Exploratory Data Analysis (EDA)
-- [ ] Visualisasi Data Interaktif
-- [ ] Implementasi Machine Learning
-- [ ] Chatbot LLM
+## Fitur
+
+- [x] **Home**: Halaman utama yang memberikan ringkasan proyek dan navigasi cepat.
+- [x] **Master Data**: Tabel interaktif untuk mencari, memfilter, dan melihat seluruh data circle Comifuro secara mendetail.
+- [ ] **Exploratory Data Analysis**: Visualisasi data secara umum untuk melihat data.
+- [ ] **Advanced Analysis**: Analisis lebih mendalam menggunakan pendekatan data science / machine learning.
+- [ ] **Trend Analysis**: Memantau perkembangan fandom dan popularitas kategori tertentu dari waktu ke waktu (antarsesi Comifuro).
+- [ ] **LLM Chatbot**: Asisten pintar berbasis AI yang dapat menjawab pertanyaan seputar data Comifuro menggunakan bahasa natural.

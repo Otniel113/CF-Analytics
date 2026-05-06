@@ -1,0 +1,16 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Python bytecode (file cache yang otomatis dibuat)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables (file rahasia berisi API Key/Password)
+.env
+
+# Folder IDE
+.vscode/
+.idea/
