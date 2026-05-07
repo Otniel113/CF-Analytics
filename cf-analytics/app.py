@@ -31,10 +31,14 @@ circle_type_filter = pn.widgets.Select(name='Circle Type', options=['All'] + sor
 rating_filter = pn.widgets.Select(name='Rating', options=['All'] + sorted(df['rating'].dropna().unique().tolist()))
 day_filter = pn.widgets.Select(name='Day', options=['All'] + sorted(df['day'].dropna().unique().tolist()))
 
-# Filter 4: Sells
+# Filter 4: Sells (Split into two columns as requested)
 sells_cols = [c for c in df.columns if c.startswith('Sells')]
 sells_options = {c.replace('Sells_', '').replace('Sells', '').strip(): c for c in sells_cols}
-sells_filter = pn.widgets.CheckBoxGroup(options=sells_options)
+items = list(sells_options.items())
+mid = 6 # User specifically asked for 6 and 5 split
+sells_filter_1 = pn.widgets.CheckBoxGroup(options=dict(items[:mid]))
+sells_filter_2 = pn.widgets.CheckBoxGroup(options=dict(items[mid:]))
+combined_sells = pn.bind(lambda s1, s2: list(s1) + list(s2), sells_filter_1, sells_filter_2)
 
 # Filter 5: Links
 link_options = {
@@ -115,8 +119,8 @@ def filter_data(search, sells, links, fandoms, circle_type, rating, day, cf_vers
 # 4. BIND DATA TO TABLES
 # ==========================================
 # We create two reactive datasets, one for CF21, one for CF22
-df_cf21 = pn.bind(filter_data, search_input, sells_filter, link_filter, fandom_filter, circle_type_filter, rating_filter, day_filter, 21)
-df_cf22 = pn.bind(filter_data, search_input, sells_filter, link_filter, fandom_filter, circle_type_filter, rating_filter, day_filter, 22)
+df_cf21 = pn.bind(filter_data, search_input, combined_sells, link_filter, fandom_filter, circle_type_filter, rating_filter, day_filter, 21)
+df_cf22 = pn.bind(filter_data, search_input, combined_sells, link_filter, fandom_filter, circle_type_filter, rating_filter, day_filter, 22)
 
 # Create highly performant Tabulator widgets
 hidden_cols = ['index', 'id', 'user_id', 'circle_cut', 'sampleworks_images']
@@ -124,8 +128,15 @@ hidden_cols = ['index', 'id', 'user_id', 'circle_cut', 'sampleworks_images']
 # Load external CSS for Tabulator styling
 css_path = 'assets/css/style.css'
 
-table_cf21 = pn.widgets.Tabulator(df_cf21, pagination='remote', page_size=20, hidden_columns=hidden_cols, disabled=True, stylesheets=[css_path], theme='bootstrap5')
-table_cf22 = pn.widgets.Tabulator(df_cf22, pagination='remote', page_size=20, hidden_columns=hidden_cols, disabled=True, stylesheets=[css_path], theme='bootstrap5')
+# Page size selector
+page_size_selector = pn.widgets.Select(name='Show rows', options=[10, 25, 50], value=10, width=120)
+
+table_cf21 = pn.widgets.Tabulator(df_cf21, pagination='remote', page_size=10, hidden_columns=hidden_cols, disabled=True, stylesheets=[css_path], theme='bootstrap5')
+table_cf22 = pn.widgets.Tabulator(df_cf22, pagination='remote', page_size=10, hidden_columns=hidden_cols, disabled=True, stylesheets=[css_path], theme='bootstrap5')
+
+
+page_size_selector.link(table_cf21, value='page_size')
+page_size_selector.link(table_cf22, value='page_size')
 
 # ==========================================
 # 5. BUILD THE UI LAYOUT
@@ -133,45 +144,108 @@ table_cf22 = pn.widgets.Tabulator(df_cf22, pagination='remote', page_size=20, hi
 # Group filters into containers with matching background colors
 search_block = pn.Column(
     search_input,
-    margin=(10, 0, 25, 0), # Added bottom margin for distance
-    styles={'padding': '15px'}
+    margin=(10, 0, 25, 0),
+    styles={'padding': '15px'},
+    sizing_mode="stretch_width"
 )
 general_block = pn.Column(
-    "**General Filters**", circle_type_filter, rating_filter, day_filter, 
-    styles={'background': '#E3F2FD', 'padding': '10px', 'border-radius': '8px'}
+    "**General Filters**", 
+    pn.Row(circle_type_filter, rating_filter, day_filter, sizing_mode="stretch_width"), 
+    styles={'background': '#E3F2FD', 'padding': '10px', 'border-radius': '8px'},
+    sizing_mode="stretch_width"
 )
+
 sells_block = pn.Column(
-    "**What they Sell**", sells_filter, 
-    styles={'background': '#FFEBEE', 'padding': '10px', 'border-radius': '8px'}
+    "**What they Sell**", 
+    pn.Row(sells_filter_1, sells_filter_2, sizing_mode="stretch_width"), 
+    styles={'background': '#FFEBEE', 'padding': '10px', 'border-radius': '8px', 'min_height': '200px'},
+    sizing_mode="stretch_both"
 )
 social_block = pn.Column(
     "**Social / Links**", link_filter, 
-    styles={'background': '#E8F5E9', 'padding': '10px', 'border-radius': '8px'}
+    styles={'background': '#E8F5E9', 'padding': '10px', 'border-radius': '8px', 'min_height': '200px'},
+    sizing_mode="stretch_both"
 )
 fandom_block = pn.Column(
     "**Fandom Focus**", fandom_filter, 
-    styles={'background': '#FFF3E0', 'padding': '10px', 'border-radius': '8px'}
+    styles={'background': '#FFF3E0', 'padding': '10px', 'border-radius': '8px', 'min_height': '200px'},
+    sizing_mode="stretch_both"
 )
 
-# A left sidebar containing all our filters
-sidebar = pn.Column(
-    "### Table Filters",
-    search_block,
-    general_block,
-    sells_block,
-    social_block,
-    fandom_block,
-    width=300
+# Row 1: Search and General
+row1 = pn.Row(search_block, general_block, sizing_mode="stretch_width")
+
+# Row 2: Sells (2 cols), Social (1 col), Fandom (1 col)
+# We use flex styles to give Sells more space (2:1:1 ratio)
+row2 = pn.Row(
+    pn.Column(sells_block, styles={'flex': '2'}),
+    pn.Column(social_block, styles={'flex': '1'}),
+    pn.Column(fandom_block, styles={'flex': '1'}),
+    sizing_mode="stretch_width"
 )
+
+tab_stylesheet = """
+.bk-tab {
+    font-size: 1.1rem !important;
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease;
+    border-radius: 8px 8px 0 0 !important;
+}
+.bk-tab:hover {
+    background-color: #f8f9fa !important;
+    color: #007bff !important;
+}
+.bk-tab.bk-active {
+    color: #007bff !important;
+    border-bottom: 4px solid #007bff !important;
+    background-color: #ffffff !important;
+}
+"""
+
 
 # The inner tabs for CF21 vs CF22 tables
 master_data_subtabs = pn.Tabs(
     ('CF22', table_cf22),
-    ('CF21', table_cf21)
+    ('CF21', table_cf21),
+    stylesheets=[tab_stylesheet],
+    margin=(20, 0)
 )
 
-# Combine the sidebar and tables into one row
-master_data_view = pn.Row(sidebar, master_data_subtabs)
+# Table controls placed at the top right
+table_controls = pn.Row(
+    pn.layout.HSpacer(),
+    page_size_selector,
+    sizing_mode="stretch_width",
+    margin=(10, 0, 5, 0)
+)
+
+# Combine everything into one column
+master_data_view = pn.Column(row1, row2, table_controls, master_data_subtabs, margin=(0, 0, 80, 0))
+
+
+main_tab_stylesheet = """
+.bk-tabs-header {
+    background-color: #f1f3f5 !important;
+    padding-top: 10px !important;
+    border-radius: 12px 12px 0 0 !important;
+}
+.bk-tab {
+    font-size: 1.3rem !important;
+    padding: 15px 30px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    background: transparent !important;
+    color: #495057 !important;
+}
+.bk-tab.bk-active {
+    background-color: #ffffff !important;
+    color: #007bff !important;
+    font-weight: 700 !important;
+    border-radius: 10px 10px 0 0 !important;
+}
+"""
+
 
 # The Main Tabs for the whole application
 main_tabs = pn.Tabs(
@@ -185,8 +259,10 @@ Aplikasi web ini untuk melihat dan menganalisis data dari Circle Festival 21 dan
     ('Exploratory Data Analysis', pn.pane.Markdown("# EDA Area\n*Visualizations will go here.*")),
     ('Advanced Analysis', pn.pane.Markdown("# Advanced Analysis\n*Clustering and Apriori will go here.*")),
     ('Trend Analysis', pn.pane.Markdown("# Trend Analysis\n*Trend analysis will go here.*")),
-    dynamic=True # Only renders the tab when clicked, saving performance
+    dynamic=True, # Only renders the tab when clicked, saving performance
+    stylesheets=[main_tab_stylesheet]
 )
+
 
 # Load Custom Jinja Template
 with open('templates/index.html', 'r', encoding='utf-8') as f:
