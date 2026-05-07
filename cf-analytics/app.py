@@ -121,28 +121,11 @@ df_cf22 = pn.bind(filter_data, search_input, sells_filter, link_filter, fandom_f
 # Create highly performant Tabulator widgets
 hidden_cols = ['index', 'id', 'user_id', 'circle_cut', 'sampleworks_images']
 
-# --- CSS coloring based on categories ---
-category_css = ""
-# 1. General (Light Blue)
-for c in ['circle_code', 'name', 'fandom', 'other_fandom', 'circle_type', 'day', 'rating']:
-    category_css += f'.tabulator-cell[tabulator-field="{c}"] {{ background-color: #E3F2FD; }}\n'
+# Load external CSS for Tabulator styling
+css_path = 'assets/css/style.css'
 
-# 2. Social Media/Links (Light Green)
-for c in ['circle_facebook', 'circle_instagram', 'circle_twitter', 'circle_other_socials', 'marketplace_link']:
-    category_css += f'.tabulator-cell[tabulator-field="{c}"] {{ background-color: #E8F5E9; }}\n'
-
-# 3. Sells (Light Pink)
-for c in df.columns:
-    if c.startswith('Sells'):
-        category_css += f'.tabulator-cell[tabulator-field="{c}"] {{ background-color: #FFEBEE; }}\n'
-        
-# 4. Fandom (Light Orange)
-for c in fandom_cols:
-    category_css += f'.tabulator-cell[tabulator-field="{c}"] {{ background-color: #FFF3E0; }}\n'
-# ----------------------------------------
-
-table_cf21 = pn.widgets.Tabulator(df_cf21, pagination='remote', page_size=20, hidden_columns=hidden_cols, disabled=True, stylesheets=[category_css])
-table_cf22 = pn.widgets.Tabulator(df_cf22, pagination='remote', page_size=20, hidden_columns=hidden_cols, disabled=True, stylesheets=[category_css])
+table_cf21 = pn.widgets.Tabulator(df_cf21, pagination='remote', page_size=20, hidden_columns=hidden_cols, disabled=True, stylesheets=[css_path], theme='bootstrap5')
+table_cf22 = pn.widgets.Tabulator(df_cf22, pagination='remote', page_size=20, hidden_columns=hidden_cols, disabled=True, stylesheets=[css_path], theme='bootstrap5')
 
 # ==========================================
 # 5. BUILD THE UI LAYOUT
@@ -205,30 +188,16 @@ Aplikasi web ini untuk melihat dan menganalisis data dari Circle Festival 21 dan
     dynamic=True # Only renders the tab when clicked, saving performance
 )
 
-# Bottom-Right Floating Chatbot Icon (Using CSS)
-floating_chat_icon = pn.pane.HTML('''
-<div style="position: fixed; bottom: 30px; right: 30px; background-color: #007bff; 
-            border-radius: 50%; width: 60px; height: 60px; display: flex; 
-            align-items: center; justify-content: center; font-size: 30px; 
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.3); cursor: pointer; z-index: 9999;
-            transition: transform 0.2s;" 
-     onmouseover="this.style.transform='scale(1.1)'" 
-     onmouseout="this.style.transform='scale(1)'"
-     onclick="alert('Chatbot UI will open here!')">
-    💬
-</div>
-''')
+# Load Custom Jinja Template
+with open('templates/index.html', 'r', encoding='utf-8') as f:
+    template_html = f.read()
 
-# Wrap everything in a nice Template
-template = pn.template.BootstrapTemplate(
-    title='CF Analytics',
-    main=[main_tabs, floating_chat_icon],
-    theme="default"
-)
+template = pn.Template(template_html)
+template.add_panel('main_tabs', main_tabs)
 
 template.servable()
 
 if __name__ == '__main__':
     # Running this via `python app.py` will serve it on the root URL path (/)
     # We specify a fixed port to avoid random port assignment each time
-    pn.serve({'/': template}, port=5006, show=True)
+    pn.serve({'/': template}, port=5006, show=True, static_dirs={'assets': './assets'}, title="CF Analytics")

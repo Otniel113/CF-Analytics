@@ -1,0 +1,57 @@
+/* General Information Columns (Light Blue) */
+.tabulator-cell[tabulator-field="circle_code"],
+.tabulator-cell[tabulator-field="name"],
+.tabulator-cell[tabulator-field="fandom"],
+.tabulator-cell[tabulator-field="other_fandom"],
+.tabulator-cell[tabulator-field="circle_type"],
+.tabulator-cell[tabulator-field="day"],
+.tabulator-cell[tabulator-field="rating"] {
+    background-color: #E3F2FD;
+}
+
+/* Social Media/Links Columns (Light Green) */
+.tabulator-cell[tabulator-field="circle_facebook"],
+.tabulator-cell[tabulator-field="circle_instagram"],
+.tabulator-cell[tabulator-field="circle_twitter"],
+.tabulator-cell[tabulator-field="circle_other_socials"],
+.tabulator-cell[tabulator-field="marketplace_link"] {
+    background-color: #E8F5E9;
+}
+
+/* Sells Columns (Light Pink) - Uses wildcard to match any column starting with Sells */
+.tabulator-cell[tabulator-field^="Sells"] {
+    background-color: #FFEBEE;
+}
+
+/* Fandom Focus Columns (Light Orange) */
+.tabulator-cell[tabulator-field="Hoyoverse"],
+.tabulator-cell[tabulator-field="Vtuber"],
+.tabulator-cell[tabulator-field="Other Gacha"],
+.tabulator-cell[tabulator-field="V-Synth"],
+.tabulator-cell[tabulator-field="Original"],
+.tabulator-cell[tabulator-field="Other (Niche)"] {
+    background-color: #FFF3E0;
+}
+
+/* Floating Chat Icon Hover Animation */
+#floating-chat-icon {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #007bff;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 9999;
+    transition: transform 0.2s;
+}
+
+#floating-chat-icon:hover {
+    transform: scale(1.1);
+}
