@@ -55,6 +55,11 @@ def filter_data(df, search, sells, links, fandoms, circle_type, rating, day, cf_
     if 'CF_Version' in filtered_df.columns:
         filtered_df = filtered_df.drop(columns=['CF_Version'])
         
+    # Add No. column starting from 1
+    filtered_df = filtered_df.reset_index(drop=True)
+    filtered_df.index += 1
+    filtered_df.insert(0, 'No.', filtered_df.index)
+    
     return filtered_df
 
 def create_tab(df):
@@ -101,7 +106,7 @@ def create_tab(df):
     df_cf22 = pn.bind(filter_data, df, search_input, combined_sells, link_filter, fandom_filter, circle_type_filter, rating_filter, day_filter, 22)
 
     # Create highly performant Tabulator widgets
-    hidden_cols = ['index', 'id', 'user_id', 'circle_cut', 'sampleworks_images']
+    hidden_cols = ['id', 'user_id', 'circle_cut', 'sampleworks_images']
 
     # Load external CSS for Tabulator styling
     css_path = 'assets/css/style.css'
@@ -109,8 +114,8 @@ def create_tab(df):
     # Page size selector
     page_size_selector = pn.widgets.Select(name='Show rows', options=[10, 25, 50], value=10, width=120)
 
-    table_cf21 = pn.widgets.Tabulator(df_cf21, pagination='remote', page_size=10, hidden_columns=hidden_cols, disabled=True, stylesheets=[css_path], theme='bootstrap5')
-    table_cf22 = pn.widgets.Tabulator(df_cf22, pagination='remote', page_size=10, hidden_columns=hidden_cols, disabled=True, stylesheets=[css_path], theme='bootstrap5')
+    table_cf21 = pn.widgets.Tabulator(df_cf21, pagination='remote', page_size=10, hidden_columns=hidden_cols, disabled=True, stylesheets=[css_path], theme='bootstrap5', show_index=False)
+    table_cf22 = pn.widgets.Tabulator(df_cf22, pagination='remote', page_size=10, hidden_columns=hidden_cols, disabled=True, stylesheets=[css_path], theme='bootstrap5', show_index=False)
 
 
     page_size_selector.link(table_cf21, value='page_size')

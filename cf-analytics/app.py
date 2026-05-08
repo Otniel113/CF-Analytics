@@ -17,12 +17,20 @@ def load_data():
     file_path = os.path.join(os.path.dirname(__file__), 'data', 'df_cf.pkl')
     try:
         # Try loading with joblib as done in notebooks
-        return joblib.load(file_path)
+        df = joblib.load(file_path)
     except Exception:
         # Fallback to pandas read_pickle if joblib fails
-        return pd.read_pickle(file_path)
+        df = pd.read_pickle(file_path)
+        
+    ret_file_path = os.path.join(os.path.dirname(__file__), 'data', 'df_returning.pkl')
+    try:
+        df_returning = joblib.load(ret_file_path)
+    except Exception:
+        df_returning = pd.read_pickle(ret_file_path)
+        
+    return df, df_returning
 
-df = load_data()
+df, df_returning = load_data()
 
 # ==========================================
 # BUILD THE UI LAYOUT
@@ -56,7 +64,7 @@ main_tabs = pn.Tabs(
     ('Master Data', tab02_master_data.create_tab(df)),
     ('Exploratory Data Analysis', tab03_ed_analysis.create_tab(df)),
     ('Advanced Analysis', tab04_advanced_analysis.create_tab(df)),
-    ('Trend Analysis', tab05_trend_analysis.create_tab(df)),
+    ('Trend Analysis', tab05_trend_analysis.create_tab(df, df_returning)),
     dynamic=True, # Only renders the tab when clicked, saving performance
     stylesheets=[main_tab_stylesheet]
 )

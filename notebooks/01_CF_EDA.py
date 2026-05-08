@@ -334,9 +334,153 @@ plt.suptitle('Product Category Participation (True vs False) - CF21', fontsize=2
 plt.tight_layout()
 plt.show()
 
+"""# Returning Circle
+
+Get name and number of returning circle
+"""
+
+# Identify unique names that appear more than once in the entire dataset
+name_counts = df_cf['name'].value_counts()
+returning_circle_names = name_counts[name_counts > 1].index.tolist()
+num_unique_returning_circles = len(returning_circle_names)
+
+print(f"Number of unique returning circle names (appearing more than once in the entire dataset): {num_unique_returning_circles}")
+# print(f"List of returning circle names: {returning_circle_names}")
+
+# Calculate for CF21
+df_cf21 = df_cf[df_cf['CF_Version'] == 21]
+total_booths_cf21 = len(df_cf21)
+booths_from_returning_cf21 = df_cf21[df_cf21['name'].isin(returning_circle_names)]
+num_booths_from_returning_cf21 = len(booths_from_returning_cf21)
+percentage_cf21 = (num_booths_from_returning_cf21 / total_booths_cf21) * 100 if total_booths_cf21 > 0 else 0
+
+print(f"\nFor CF21 (Total Booths: {total_booths_cf21}):")
+print(f"  Number of booths belonging to returning circles: {num_booths_from_returning_cf21}")
+print(f"  Percentage of booths belonging to returning circles: {percentage_cf21:.2f}%")
+
+# Calculate for CF22
+df_cf22 = df_cf[df_cf['CF_Version'] == 22]
+total_booths_cf22 = len(df_cf22)
+booths_from_returning_cf22 = df_cf22[df_cf22['name'].isin(returning_circle_names)]
+num_booths_from_returning_cf22 = len(booths_from_returning_cf22)
+percentage_cf22 = (num_booths_from_returning_cf22 / total_booths_cf22) * 100 if total_booths_cf22 > 0 else 0
+
+print(f"\nFor CF22 (Total Booths: {total_booths_cf22}):")
+print(f"  Number of booths belonging to returning circles: {num_booths_from_returning_cf22}")
+print(f"  Percentage of booths belonging to returning circles: {percentage_cf22:.2f}%")
+
+"""Is circle type booth upgraded or not?"""
+
+# 1. Pivot the circle types for returning circles
+df_returning = df_cf[df_cf['name'].isin(returning_circle_names)].pivot(
+    index='name',
+    columns='CF_Version',
+    values='circle_type'
+).rename(columns={21: '21_circle_type', 22: '22_circle_type'}).reset_index()
+
+# 2. Define ordinal mapping for comparison logic
+ordinal_map = {
+    '1 Space(s)': 0,
+    '2 Space(s)': 1,
+    '4 Space(s)': 2,
+    'Booth_A': 2,
+    'Booth_B': 3
+}
+
+# 3. Determine upgrade status
+def determine_status(row):
+    v21 = ordinal_map.get(row['21_circle_type'])
+    v22 = ordinal_map.get(row['22_circle_type'])
+
+    if v21 is None or v22 is None: return "Incomplete"
+    if v22 > v21: return "Upgrade"
+    if v22 < v21: return "Downgrade"
+    return "Stay"
+
+df_returning['upgrade_status'] = df_returning.apply(determine_status, axis=1)
+
+# 4. Display Summary
+print("Returning Circle Booth Size Migration Summary (CF21 to CF22):")
+print(df_returning['upgrade_status'].value_counts())
+
+print("\nSample of df_returning:")
+df_returning.head(10)
+
+"""Karbit Detection"""
+
+# 1. Identify fandom columns for calculation
+fandom_cols = ['Hoyoverse', 'Vtuber', 'Other Gacha', 'V-Synth', 'Original', 'Other (Niche)']
+
+# 2. Extract data from df_cf for both years
+# We take the boolean flags for logic and the text columns for the final dataframe
+data_21 = df_cf[df_cf['CF_Version'] == 21][['name', 'fandom', 'other_fandom'] + fandom_cols].set_index('name').add_prefix('21_')
+data_22 = df_cf[df_cf['CF_Version'] == 22][['name', 'fandom', 'other_fandom'] + fandom_cols].set_index('name').add_prefix('22_')
+
+# Join text columns and flags to df_returning
+df_returning = df_returning.merge(data_21, on='name', how='left').merge(data_22, on='name', how='left')
+
+# 3. Categorization Logic using the boolean flags
+def categorize_fandom_loyalty(row):
+    c21 = np.array([row[f'21_{c}'] for c in fandom_cols])
+    c22 = np.array([row[f'22_{c}'] for c in fandom_cols])
+
+    if np.array_equal(c21, c22):
+        return 'Loyalist'
+    if np.any(c21 & ~c22):
+        return 'Karbit'
+    if np.all(c22 >= c21):
+        return 'Expander'
+    return 'Other'
+
+df_returning['fandom_loyalty'] = df_returning.apply(categorize_fandom_loyalty, axis=1)
+
+# 4. Clean up: Drop the boolean helper columns and keep only text + loyalty
+cols_to_keep = ['name', '21_circle_type', '22_circle_type', 'upgrade_status',
+                '21_fandom', '21_other_fandom', '22_fandom', '22_other_fandom', 'fandom_loyalty']
+df_returning = df_returning[cols_to_keep]
+
+# 5. Output results
+print("Fandom Loyalty Status for Returning Circles:")
+print(df_returning['fandom_loyalty'].value_counts())
+
+df_returning[['name', '21_fandom', '21_other_fandom', '22_fandom', '22_other_fandom', 'fandom_loyalty']].head(10)
+
+"""Product Diversification"""
+
+# 1. Identify product columns (Sells...)
+sells_cols = [col for col in df_cf.columns if col.startswith('Sells')]
+
+# 2. Calculate product counts for each year
+# Create temporary DataFrames for counts
+prod_counts_21 = df_cf[df_cf['CF_Version'] == 21].set_index('name')[sells_cols].sum(axis=1).rename('21_product_counts')
+prod_counts_22 = df_cf[df_cf['CF_Version'] == 22].set_index('name')[sells_cols].sum(axis=1).rename('22_product_counts')
+
+# 3. Merge into df_returning
+df_returning = df_returning.merge(prod_counts_21, on='name', how='left')
+df_returning = df_returning.merge(prod_counts_22, on='name', how='left')
+
+# 4. Determine diversification status
+def determine_diver_status(row):
+    c21 = row['21_product_counts']
+    c22 = row['22_product_counts']
+
+    if pd.isna(c21) or pd.isna(c22): return "Incomplete"
+    if c22 > c21: return "More Diverse"
+    if c22 < c21: return "Less Diverse"
+    return "Stay"
+
+df_returning['diver_status'] = df_returning.apply(determine_diver_status, axis=1)
+
+# 5. Output summary and sample
+print("Product Diversification Summary:")
+print(df_returning['diver_status'].value_counts())
+
+df_returning[['name', '21_product_counts', '22_product_counts', 'diver_status']].head(10)
+
 """# Export"""
 
 # Export the combined and processed dataframe into a pickle file
 joblib.dump(df_cf, 'df_cf.pkl')
+joblib.dump(df_returning, 'df_returning.pkl')
 
-print("Successfully exported df_cf to 'df_cf.pkl' using joblib.")
+print("Successfully exported to .pkl using joblib.")

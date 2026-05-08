@@ -1,4 +1,5 @@
 /* Base Data Columns (White) */
+.tabulator-cell[tabulator-field="No."],
 .tabulator-cell[tabulator-field="circle_code"],
 .tabulator-cell[tabulator-field="name"],
 .tabulator-cell[tabulator-field="fandom"],
