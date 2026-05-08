@@ -7,13 +7,16 @@ Bagian ini berisi aplikasi web utama untuk melakukan analisis data Comifuro seca
 - **Panel**: Framework untuk membuat dashboard interaktif dan aplikasi data.
 - **Pandas**: Digunakan untuk manipulasi dan pemrosesan data (tabel master).
 - **Tabulator**: Extension Panel untuk tampilan tabel yang lebih canggih (sorting, filtering).
+- **Plotly**: Library visualisasi data interaktif untuk EDA dan Trend Analysis.
 - **Joblib/Pickle**: Digunakan untuk memuat data pre-processed (`.pkl`).
 
 ## Struktur Folder & File
 - `app.py`: File utama aplikasi dashboard.
+- `tabs/`: Folder berisi modul-modul untuk setiap tab aplikasi.
 - `requirements.txt`: Daftar dependensi Python yang dibutuhkan.
 - `data/`: Folder yang berisi data yang sudah diproses (misalnya `df_cf.pkl`).
-- `README.md`: File dokumentasi teknis ini.
+- `assets/`: Folder berisi aset statis seperti CSS.
+- `templates/`: Folder berisi template Jinja2 untuk layout web.
 
 ## Instalasi & Cara Menjalankan
 
@@ -31,10 +34,12 @@ Bagian ini berisi aplikasi web utama untuk melakukan analisis data Comifuro seca
 3. **Menjalankan Aplikasi:**
    Terminal dalam folder `cf-analytics`:
    ```powershell
-   panel serve app.py --show
+   python app.py
    ```
 
 ## Fitur Utama
-- **Pencarian Cepat**: Memungkinkan pengguna mencari circle berdasarkan nama, kode booth, atau fandom secara real-time.
-- **Filtering Dinamis**: Menyediakan filter mendalam berdasarkan jenis circle, rating (mature/general), hari operasional, hingga kategori produk spesifik yang dijual.
-- **Table Interaktif**: Menampilkan data master dalam format tabel yang mendukung pengurutan (*sorting*) dan penyaringan kolom untuk kemudahan analisis manual.
+- **Master Data**: Tabel interaktif untuk mencari, memfilter, dan melihat seluruh data circle Comifuro secara mendetail.
+- **Exploratory Data Analysis**: Visualisasi data interaktif (Pie & Bar Charts) menggunakan Plotly untuk melihat persebaran kategori, rating, link sosial media, dan produk.
+- **Trend Analysis**: Memantau perkembangan fandom dan popularitas kategori tertentu dari waktu ke waktu (antarsesi Comifuro) dengan line chart interaktif.
+- **Advanced Analysis**: (Dalam Pengembangan) Analisis lebih mendalam menggunakan pendekatan data science / machine learning.
+- **LLM Chatbot**: (Dalam Pengembangan) Asisten pintar berbasis AI untuk tanya jawab seputar data Comifuro.
