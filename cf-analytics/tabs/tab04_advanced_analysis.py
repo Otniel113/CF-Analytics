@@ -4,6 +4,7 @@ import os
 
 # Import subtabs
 from .subtabs.subtab04_recommendation import create_recommendation_subtab
+from .subtabs.subtab04_rating import create_rating_subtab
 
 def create_tab(df=None):
     if df is None:
@@ -31,18 +32,19 @@ def create_tab(df=None):
 
     # Initialize subtabs
     recommendation_subtab = create_recommendation_subtab(df)
+    rating_subtab = create_rating_subtab(df)
     
     # Main Tabs container
     main_tabs = pn.Tabs(
         ("Recommendation", recommendation_subtab),
-        ("Other Advanced Analytics", pn.pane.Markdown("### 🚀 Coming Soon\nMore advanced statistical models will be available here soon.")),
+        ("Faktor Berpengaruh", rating_subtab),
         stylesheets=[tab_stylesheet],
         margin=(20, 0)
     )
 
     # Return with styling consistent with tab03_ed_analysis.py
     return pn.Column(
-        pn.pane.HTML("<h2 style='color: #2c3e50; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px;'>Advanced Statistics</h2>"),
+        pn.pane.HTML("<h2 style='color: #2c3e50; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px;'>Advanced Analysis</h2>"),
         main_tabs,
         sizing_mode="stretch_width",
         margin=(20, 20)

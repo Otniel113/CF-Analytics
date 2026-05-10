@@ -63,8 +63,14 @@ def create_recommendation_subtab(df):
         import __main__
         if not hasattr(__main__, 'CircleRecommender'):
             __main__.CircleRecommender = CircleRecommender
-        recommender = joblib.load(pipeline_path)
+        
+        if os.path.exists(pipeline_path):
+            recommender = joblib.load(pipeline_path)
+        else:
+            print(f"Warning: Pipeline file not found at {pipeline_path}. Using fresh instance.")
+            recommender = CircleRecommender()
     except Exception as e:
+        print(f"Error loading recommender pipeline: {e}")
         recommender = CircleRecommender()
 
     # Preprocess the data
@@ -109,10 +115,20 @@ def create_recommendation_subtab(df):
             name='Jumlah Rekomendasi', options=[5, 10, 20], value=5, width=150
         )
         
-        search_input = pn.widgets.TextInput(
+        # Build autocomplete options with dual entries for prefix matching
+        all_entries = df_rec[['circle_code', 'name']].drop_duplicates()
+        options_list = []
+        code_lookup = {}
+        for _, row in all_entries.iterrows():
+            code = str(row['circle_code']).strip() if pd.notna(row['circle_code']) else ''
+            name = str(row['name']).strip() if pd.notna(row['name']) else ''
+            by_code = f"{code} ~ {name}"; options_list.append(by_code); code_lookup[by_code] = code
+            by_name = f"{name} ~ {code}"; options_list.append(by_name); code_lookup[by_name] = code
+
+        search_input = pn.widgets.AutocompleteInput(
             name=f'Cari Sirkel (Nama / Kode Sirkel) di {version_name}', 
-            placeholder='Ketik nama atau kode sirkel...',
-            sizing_mode='stretch_width'
+            options=options_list, placeholder='Ketik nama atau kode sirkel...',
+            min_characters=1, case_sensitive=False, restrict=False, sizing_mode='stretch_width'
         )
 
         btn_search = pn.widgets.Button(name='Cari Rekomendasi', button_type='success', width=180, height=45, align='end')
@@ -120,12 +136,13 @@ def create_recommendation_subtab(df):
         results_pane = pn.Column(sizing_mode='stretch_width', margin=(10, 0))
 
         def execute_search(event=None):
-            search_val = str(search_input.value).strip()
-            if not search_val:
+            raw_val = str(search_input.value).strip()
+            if not raw_val:
                 results_pane.clear()
                 results_pane.append(pn.pane.Alert("Silakan ketik nama/kode sirkel terlebih dahulu.", alert_type="warning"))
                 return
 
+            search_val = code_lookup.get(raw_val, raw_val)
             n = top_n_selector.value
             res = recommender.get_recommendations(search_val, df_rec, top_n=n)
 

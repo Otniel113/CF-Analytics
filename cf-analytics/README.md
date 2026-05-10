@@ -19,6 +19,7 @@ Bagian ini berisi aplikasi web utama untuk melakukan analisis data Comifuro seca
 - `requirements.txt`: Daftar dependensi Python yang dibutuhkan.
 - `data/`: Folder yang berisi data yang sudah diproses (misalnya `df_cf.pkl`).
 - `assets/`: Folder berisi aset statis seperti CSS dan gambar.
+- `templates/`: Struktur HTML utama menggukanakn format Jinja.
 
 ## Instalasi & Cara Menjalankan
 
@@ -38,10 +39,3 @@ Bagian ini berisi aplikasi web utama untuk melakukan analisis data Comifuro seca
    ```powershell
    python app.py
    ```
-
-## Fitur Utama
-- **Master Data**: Tabel interaktif untuk mencari, memfilter, dan melihat seluruh data circle Comifuro secara mendetail.
-- **Exploratory Data Analysis**: Visualisasi data interaktif (Pie & Bar Charts) menggunakan Plotly untuk melihat persebaran kategori, rating, link sosial media, dan produk.
-- **Trend Analysis**: Memantau perkembangan fandom dan analisis mendalam sirkel yang hadir kembali (Returning Circles) dengan visualisasi upgrade booth, loyalitas fandom, dan diversifikasi produk.
-- **Advanced Analysis**: Sistem rekomendasi sirkel yang mencari kemiripan antar sirkel menggunakan algoritma Jaccard Distance, ditampilkan dengan card interaktif yang kaya akan metadata (termasuk gambar circle cut).
-- **LLM Chatbot**: (Dalam Pengembangan) Asisten pintar berbasis AI untuk tanya jawab seputar data Comifuro.

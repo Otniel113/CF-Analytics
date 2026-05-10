@@ -16,17 +16,17 @@ pn.extension('plotly', 'tabulator', sizing_mode="stretch_width")
 def load_data():
     file_path = os.path.join(os.path.dirname(__file__), 'data', 'df_cf.pkl')
     try:
-        # Try loading with joblib as done in notebooks
         df = joblib.load(file_path)
-    except Exception:
-        # Fallback to pandas read_pickle if joblib fails
-        df = pd.read_pickle(file_path)
+    except Exception as e:
+        print(f"Error loading df_cf: {e}")
+        df = None
         
     ret_file_path = os.path.join(os.path.dirname(__file__), 'data', 'df_returning.pkl')
     try:
         df_returning = joblib.load(ret_file_path)
-    except Exception:
-        df_returning = pd.read_pickle(ret_file_path)
+    except Exception as e:
+        print(f"Error loading df_returning: {e}")
+        df_returning = None
         
     return df, df_returning
 

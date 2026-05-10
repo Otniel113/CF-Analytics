@@ -30,8 +30,8 @@ Proyek ini terbagi menjadi dua bagian utama:
 ## Fitur
 
 - [x] **Home**: Halaman utama yang memberikan ringkasan proyek dan navigasi cepat.
-- [x] **Master Data**: Tabel interaktif untuk mencari, memfilter, dan melihat seluruh data circle Comifuro secara mendetail.
-- [x] **Exploratory Data Analysis**: Visualisasi data interaktif menggunakan Plotly untuk melihat persebaran data.
-- [x] **Advanced Analysis**: Implementasi sistem rekomendasi sirkel berbasis kemiripan Jaccard Distance.
-- [x] **Trend Analysis**: Memantau perkembangan fandom dan analisis sirkel yang hadir kembali (returning circles).
-- [ ] **LLM Chatbot**: Asisten pintar berbasis AI yang dapat menjawab pertanyaan seputar data Comifuro menggunakan bahasa natural.
+- [x] **Master Data**: Basis data seluruh booth di Comifuro. Bisa melakukan pencarian, filter, dan pengurutan.
+- [x] **Exploratory Data Analysis**: Visualisasi data untuk statistik deskriptif. Untuk lebih mengetahui persebaran data CF.
+- [x] **Advanced Analysis**: Analisis data lebih lanjut (tingkat tinggi). Menggunakan pendekatan data science seperti machine learning.
+- [x] **Trend Analysis**: Menganalisis trending Comifuro dengan membandingkan pada acara Comifuro sebelumnya.
+- [ ] **LLM Chatbot**: Bot AI LLM yang bisa ditanya untuk mengetahui informasi lebih detail dan mendalam.
