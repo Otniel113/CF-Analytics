@@ -4,7 +4,7 @@ import os
 
 # Import subtabs
 from .subtabs.subtab04_recommendation import create_recommendation_subtab
-from .subtabs.subtab04_rating import create_rating_subtab
+from .subtabs.subtab04_faktor import create_rating_subtab
 
 def create_tab(df=None):
     if df is None:
