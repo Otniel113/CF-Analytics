@@ -3,7 +3,7 @@
 Bagian ini berisi aplikasi web utama untuk melakukan analisis data Comifuro secara interaktif.
 
 ## Tech Stack
-- **Python**: Bahasa pemrograman utama.
+- **Python**: Versi 3.10 atau yang lebih baru.
 - **Panel**: Framework untuk membuat dashboard interaktif dan aplikasi data.
 - **Pandas**: Digunakan untuk manipulasi dan pemrosesan data (tabel master).
 - **Tabulator**: Extension Panel untuk tampilan tabel yang lebih canggih (sorting, filtering).
