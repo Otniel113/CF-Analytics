@@ -57,7 +57,7 @@ def get_type_content(df=None, current_dir=None):
 
             styled_coef = coef_df.style.map(color_scale).format("{:.3f}")
             
-            coef_pane.append(pn.pane.HTML("<h3 style='color: #2c3e50;'>Tabel Koefisien Regresi Logistik per Kelas</h3>"))
+            coef_pane.append(pn.pane.HTML("<h2 style='color: #2c3e50;'>Tabel Koefisien Regresi Logistik per Kategori Booth</h2>"))
             coef_pane.append(pn.pane.DataFrame(styled_coef, sizing_mode='stretch_width'))
             coef_pane.append(pn.pane.HTML("""
                 <div style="background-color: #f8f9fa; border-left: 5px solid #007bff; padding: 15px; border-radius: 4px; margin-top: 15px;">
@@ -103,4 +103,128 @@ def get_type_content(df=None, current_dir=None):
         
         return pn.Row(pn.pane.Plotly(fig1, sizing_mode="stretch_width", height=350), pn.pane.Plotly(fig2, sizing_mode="stretch_width", height=350), sizing_mode="stretch_width")
 
-    return pn.Column(type_desc, plot_pane, keterangan, pn.layout.Divider(), coef_pane, pn.layout.Divider(), pn.pane.HTML("<h2 style='color: #2c3e50;'>Inspeksi Detail Faktor</h2>"), feature_selector, render_stacked_bars, sizing_mode="stretch_width")
+    type_content = pn.Column(
+        type_desc, plot_pane, keterangan, pn.layout.Divider(), coef_pane, pn.layout.Divider(),
+        pn.pane.HTML("<h2 style='color: #2c3e50;'>Inspeksi Detail Faktor</h2>"), feature_selector, render_stacked_bars,
+        sizing_mode="stretch_width"
+    )
+
+    # --- Model Prediction ---
+    model_path = current_dir / "pipelines" / "prediksi_type_pipeline.pkl"
+    try:
+        model = joblib.load(model_path)
+        feature_cols = [
+            'SellsCommision', 'SellsComic', 'SellsArtbook', 'SellsPhotobookGeneral',
+            'SellsNovel', 'SellsGame', 'SellsMusic', 'SellsGoods', 'SellsHandmadeCrafts',
+            'SellsMagazine', 'SellsPhotobookCosplay', 'Hoyoverse', 'Vtuber',
+            'Other Gacha', 'V-Synth', 'Original', 'Other (Niche)'
+        ]
+
+        toggle_btn_style = """
+        .bk-btn.bk-btn-default {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            color: #495057;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+        .bk-btn.bk-btn-default.bk-active {
+            background-color: #f59e0b !important;
+            border-color: #f59e0b !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+        .bk-btn.bk-btn-default:hover:not(.bk-active) {
+            background-color: #fef3c7 !important;
+            border-color: #f59e0b !important;
+            color: #f59e0b !important;
+        }
+        """
+
+        toggles = {
+            feat: pn.widgets.RadioButtonGroup(
+                options=['No', 'Yes'], value='No', button_type='default',
+                width=110, stylesheets=[toggle_btn_style]
+            )
+            for feat in feature_cols
+        }
+
+        toggle_rows = []
+        for feat in feature_cols:
+            toggle_rows.append(pn.Row(
+                pn.pane.HTML(
+                    f"<span style='display:flex; align-items:center; height:100%; "
+                    f"color:#2c3e50; font-weight:500; font-size:0.95rem;'>{feat}</span>",
+                    width=180, height=36
+                ),
+                toggles[feat],
+                align='center',
+                margin=(3, 0)
+            ))
+
+        mid = len(toggle_rows) // 2
+        left_toggles  = toggle_rows[:mid]
+        right_toggles = toggle_rows[mid:]
+
+        color_map = {
+            '1 Space(s)': {'bg': '#eff6ff', 'border': '#3b82f6', 'text': '#084298'},
+            '2 Space(s)': {'bg': '#d1fae5', 'border': '#10b981', 'text': '#065f46'},
+            '4 Space(s)': {'bg': '#fae8ff', 'border': '#d946ef', 'text': '#86198f'},
+            'Booth_A':    {'bg': '#ede9fe', 'border': '#8b5cf6', 'text': '#4c1d95'},
+            'Booth_B':    {'bg': '#fee2e2', 'border': '#ef4444', 'text': '#991b1b'},
+        }
+
+        prediction_output = pn.pane.HTML("", width=280, min_height=200)
+
+        @pn.depends(*[toggles[feat].param.value for feat in feature_cols], watch=True)
+        def update_prediction(*values):
+            input_data = [1 if val == 'Yes' else 0 for val in values]
+            df_input = pd.DataFrame([input_data], columns=feature_cols)
+
+            pred = model.predict(df_input)[0]
+            pred_proba = model.predict_proba(df_input)[0]
+            classes = model.classes_
+            colors = color_map.get(pred, color_map['1 Space(s)'])
+
+            proba_rows = "".join([
+                f"<div style='display:flex; justify-content:space-between; "
+                f"padding:5px 0; border-bottom:1px solid rgba(0,0,0,0.07);'>"
+                f"<span style='font-weight:600;'>{c}</span>"
+                f"<span>{p:.2%}</span></div>"
+                for c, p in zip(classes, pred_proba)
+            ])
+
+            prediction_output.object = f"""
+            <div style="background-color:{colors['bg']}; border:2px solid {colors['border']}; 
+                        padding:20px; border-radius:12px; text-align:center;">
+                <p style="margin:0; font-size:1.1rem; color:{colors['text']}; font-weight:500;">Prediksi Tipe Booth:</p>
+                <h2 style="margin:10px 0; font-size:2rem; color:{colors['text']}; line-height:1.2;">{pred}</h2>
+                <div style="margin-top:15px; text-align:left; border-top:1px solid {colors['border']}; padding-top:12px;">
+                    {proba_rows}
+                </div>
+            </div>
+            """
+
+        update_prediction(*[toggles[feat].value for feat in feature_cols])
+
+        prediction_section = pn.Column(
+            pn.layout.Divider(),
+            pn.pane.HTML("<h2 style='color: #2c3e50; margin-bottom: 5px;'>Prediksi Tipe Booth</h2>"),
+            pn.Row(
+                pn.Column(pn.Row(pn.Column(*left_toggles, sizing_mode="stretch_width"), pn.Column(*right_toggles, sizing_mode="stretch_width"), sizing_mode="stretch_width"), sizing_mode="stretch_width"),
+                pn.Column(prediction_output, width=280, margin=(0, 0, 0, 20)),
+                sizing_mode="stretch_width"
+            ),
+            pn.pane.HTML("""
+                <div style="background-color: #f8f9fa; border-left: 5px solid #10b981; padding: 15px; border-radius: 4px; margin-top: 15px;">
+                    <p style="margin: 0; color: #495057;">
+                        <strong>Keterangan:</strong> Hasil prediksi dan nilai peluang didapatkan dengan menggunakan machine learning Regresi Logistik.
+                    </p>
+                </div>
+            """, sizing_mode='stretch_width'),
+            sizing_mode="stretch_width"
+        )
+        type_content.append(prediction_section)
+    except Exception as e:
+        type_content.append(pn.pane.Markdown(f"**Gagal memuat model prediksi:** {e}"))
+    
+    return type_content

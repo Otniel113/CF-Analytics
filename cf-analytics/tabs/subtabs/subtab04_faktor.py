@@ -6,7 +6,7 @@ from .faktor_detail.faktor_pengaruh_rating import get_rating_content
 from .faktor_detail.faktor_pengaruh_type import get_type_content
 
 def create_rating_subtab(df=None):
-    # Tab Styling for sub-subtabs
+    # Tab Styling for sub-subtabs (Green to differentiate from main tabs)
     sub_tab_stylesheet = """
     .bk-tab {
         font-size: 1.1rem !important;
@@ -15,11 +15,11 @@ def create_rating_subtab(df=None):
         transition: all 0.3s ease;
     }
     .bk-tab.bk-active {
-        color: #007bff !important;
-        border-bottom: 4px solid #007bff !important;
+        color: #10b981 !important;
+        border-bottom: 4px solid #10b981 !important;
     }
     .bk-tab:hover {
-        color: #007bff !important;
+        color: #10b981 !important;
     }
     """
 

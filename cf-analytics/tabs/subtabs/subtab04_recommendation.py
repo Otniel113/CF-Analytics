@@ -101,11 +101,11 @@ def create_recommendation_subtab(df):
     }
     .bk-tab:hover {
         background-color: #f8f9fa !important;
-        color: #007bff !important;
+        color: #10b981 !important;
     }
     .bk-tab.bk-active {
-        color: #007bff !important;
-        border-bottom: 4px solid #007bff !important;
+        color: #10b981 !important;
+        border-bottom: 4px solid #10b981 !important;
         background-color: #ffffff !important;
     }
     """
