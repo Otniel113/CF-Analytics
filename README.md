@@ -34,4 +34,4 @@ Proyek ini terbagi menjadi dua bagian utama:
 - [x] **Exploratory Data Analysis**: Visualisasi data untuk statistik deskriptif. Untuk lebih mengetahui persebaran data CF.
 - [x] **Advanced Analysis**: Analisis data lebih lanjut (tingkat tinggi). Menggunakan pendekatan data science seperti machine learning.
 - [x] **Trend Analysis**: Menganalisis trending Comifuro dengan membandingkan pada acara Comifuro sebelumnya.
-- [ ] **LLM Chatbot**: Bot AI LLM yang bisa ditanya untuk mengetahui informasi lebih detail dan mendalam.
+- [x] **LLM Chatbot**: Bot AI LLM (Kofu-chan) yang bisa ditanya untuk mengetahui informasi lebih detail dan mendalam tentang katalog CF22.

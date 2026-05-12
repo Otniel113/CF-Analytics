@@ -34,7 +34,18 @@ Bagian ini berisi aplikasi web utama untuk melakukan analisis data Comifuro seca
    pip install -r requirements.txt
    ```
 
-3. **Menjalankan Aplikasi:**
+3. **Set Up Environment Variables:**
+   Salin file `.env.example` menjadi `.env` dan masukkan API Key Gemini Anda:
+   ```powershell
+   copy ..\.env.example ..\.env
+   ```
+   Buka file `.env` di root folder dan update nilainya:
+   ```env
+   GEMINI_API_KEY=your_actual_key_here
+   GEMINI_MODEL_ID=gemini-3.1-flash-lite
+   ```
+
+4. **Menjalankan Aplikasi:**
    Terminal dalam folder `cf-analytics`:
    ```powershell
    python app.py

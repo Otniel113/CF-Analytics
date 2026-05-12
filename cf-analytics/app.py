@@ -5,7 +5,7 @@ import joblib
 import os
 
 # Import tabs
-from tabs import tab01_home, tab02_master_data, tab03_ed_analysis, tab04_advanced_analysis, tab05_trend_analysis
+from tabs import tab01_home, tab02_master_data, tab03_ed_analysis, tab04_advanced_analysis, tab05_trend_analysis, tab06_chatbot
 
 # 1. Initialize Panel and Tabulator (required for advanced tables)
 pn.extension('plotly', 'tabulator', sizing_mode="stretch_width")
@@ -65,6 +65,7 @@ main_tabs = pn.Tabs(
     ('Exploratory Data Analysis', tab03_ed_analysis.create_tab(df)),
     ('Advanced Analysis', tab04_advanced_analysis.create_tab(df)),
     ('Trend Analysis', tab05_trend_analysis.create_tab(df, df_returning)),
+    ('Chatbot', tab06_chatbot.create_tab(df)),
     dynamic=True, # Only renders the tab when clicked, saving performance
     stylesheets=[main_tab_stylesheet]
 )

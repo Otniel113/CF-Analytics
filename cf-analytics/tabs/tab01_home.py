@@ -43,7 +43,7 @@ def create_tab():
                 <strong style="font-size: 1.3rem; color: #d35400;">Trend Analysis</strong><br><span style="font-size: 1.15rem;">Menganalisis trending Comifuro dengan membandingkan pada acara Comifuro sebelumnya.</span>
             </div>
             <div style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                <strong style="font-size: 1.3rem; color: #d35400;">Chatbot</strong><br><span style="font-size: 1.15rem;">Bot AI LLM yang bisa ditanya untuk mengetahui informasi lebih detail dan mendalam.</span>
+                <strong style="font-size: 1.3rem; color: #d35400;">Chatbot</strong><br><span style="font-size: 1.15rem;">Bot AI LLM (Kofu-chan) yang bisa ditanya untuk mengetahui informasi lebih detail dan mendalam tentang katalog CF22.</span>
             </div>
         </div>
     </div>
