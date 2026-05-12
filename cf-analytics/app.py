@@ -5,7 +5,8 @@ import joblib
 import os
 
 # Import tabs
-from tabs import tab01_home, tab02_master_data, tab03_ed_analysis, tab04_advanced_analysis, tab05_trend_analysis, tab06_chatbot
+from tabs import tab01_home, tab02_master_data, tab03_ed_analysis, tab04_advanced_analysis, tab05_trend_analysis
+from chatbot import kofu_chan
 
 # 1. Initialize Panel and Tabulator (required for advanced tables)
 pn.extension('plotly', 'tabulator', sizing_mode="stretch_width")
@@ -65,10 +66,12 @@ main_tabs = pn.Tabs(
     ('Exploratory Data Analysis', tab03_ed_analysis.create_tab(df)),
     ('Advanced Analysis', tab04_advanced_analysis.create_tab(df)),
     ('Trend Analysis', tab05_trend_analysis.create_tab(df, df_returning)),
-    ('Chatbot', tab06_chatbot.create_tab(df)),
     dynamic=True, # Only renders the tab when clicked, saving performance
     stylesheets=[main_tab_stylesheet]
 )
+
+# Create Chatbot separately for floating widget
+chatbot_component = kofu_chan.create_tab(df)
 
 # Load Custom Jinja Template
 template_path = os.path.join(os.path.dirname(__file__), 'templates', 'index.html')
@@ -77,6 +80,7 @@ with open(template_path, 'r', encoding='utf-8') as f:
 
 template = pn.Template(template_html)
 template.add_panel('main_tabs', main_tabs)
+template.add_panel('chatbot', chatbot_component)
 
 template.servable()
 

@@ -83,60 +83,81 @@ def create_tab(cf_dataframe):
                 else:
                     raise e
             
-            return response.text
+            return {"user": "Kofu-chan", "avatar": "🌸", "object": response.text}
         except Exception as e:
-            return f"Error: {e}"
+            return {"user": "Kofu-chan", "avatar": "🌸", "object": f"Maaf Goshujin-sama, terjadi error: {e}"}
 
     chat_interface = pn.chat.ChatInterface(
         callback=handle_chat_response,
         sizing_mode="stretch_both",
-        min_height=600
+        show_undo=False,
+        show_rerun=False,
+        show_clear=True,
+        user="Goshujin-sama",
+        avatar="👤"
     )
     
     chat_interface.send(
-        "Halo👋! Saya Kofu-chan, AI Assistant CF Analytics. Saya sudah membaca data katalog CF22. Jika ada pertanyaan spesifik bisa langsung ditanyakan atau bisa juga minta rekomendasi booth dengan kriteria tertentu. Silakan bertanya apa saja tentang Comifuro!", 
-        user="System", 
+        "Halo👋! Saya Kofu-chan. Silakan bertanya apa saja tentang Comifuro!", 
+        user="Kofu-chan", 
+        avatar="🌸",
         respond=False
     )
 
-    # Sample Questions Buttons from old file
-    sample_questions = [
-        "Apa saja hal menarik yang bisa dilakukan dan didapatkan di Comifuro?",
-        "Apakah ada pola dari kode booth dengan apa yang mereka jual ataupun dari fandom apa?",
-        "Berikan saya rekomendasi booth yang berfokus ke anime slice-of-life",
-        "Apakah ada booth yang berfokus ke game tapi bukan game gacha?"
-    ]
+    # Sample Questions Mapping: {Short Label: Full Question}
+    sample_questions_map = {
+        "Hal menarik di Comifuro?": "Apa saja hal menarik yang bisa dilakukan dan didapatkan di Comifuro?",
+        "Pola kode booth & fandom?": "Apakah ada pola dari kode booth dengan apa yang mereka jual ataupun dari fandom apa?",
+        "Rekomendasi anime slice-of-life": "Berikan saya rekomendasi booth yang berfokus ke anime slice-of-life",
+        "Booth game non-gacha?": "Apakah ada booth yang berfokus ke game tapi bukan game gacha?"
+    }
     
+    def on_sample_click(event):
+        sample_questions_layout.visible = False
+        short_q = event.obj.name
+        full_q = sample_questions_map.get(short_q, short_q)
+        chat_interface.send(full_q, respond=True)
+
     buttons = []
-    for q in sample_questions:
+    for short_q in sample_questions_map.keys():
         btn = pn.widgets.Button(
-            name=q, 
-            button_type="primary", 
-            description="Klik untuk bertanya",
+            name=short_q, 
+            button_type="light",
             styles={
-                'border-radius': '20px',
-                'font-size': '12px',
-                'margin-bottom': '5px'
-            }
+                'border-radius': '15px',
+                'font-size': '10px',
+                'border': '1px solid #007bff',
+                'color': '#007bff'
+            },
+            sizing_mode="stretch_width"
         )
-        btn.on_click(lambda event, question=q: chat_interface.send(question, respond=True))
+        btn.on_click(on_sample_click)
         buttons.append(btn)
         
     sample_questions_layout = pn.Column(
-        pn.pane.Markdown("**Contoh pertanyaan:**", styles={'margin-top': '10px'}),
+        pn.pane.Markdown("**Saran pertanyaan:**", styles={'margin': '5px 0 0 0', 'font-size': '11px', 'color': '#666'}),
         pn.GridBox(
             *buttons, 
             ncols=2,
-            styles={'margin-bottom': '10px'}
+            sizing_mode="stretch_width"
         ),
-        sizing_mode="stretch_width"
+        sizing_mode="stretch_width",
+        styles={'padding': '5px'}
     )
 
-    top_warning = pn.pane.Markdown("⚠️ *Kofu-chan masih berupa eksperimental atau prototype yang masih memiliki banyak limitasi (batasan)*")
-    bottom_disclaimer = pn.pane.Markdown(" *Kofu-chan masih bisa membuat kesalahan*", align="center")
+    # Watcher to handle visibility based on chat history
+    def update_samples_visibility(event):
+        if len(event.new) > 1:
+            sample_questions_layout.visible = False
+        else:
+            sample_questions_layout.visible = True
+    
+    chat_interface.param.watch(update_samples_visibility, 'objects')
+
+    top_warning = pn.pane.Markdown("⚠️ *Kofu-chan masih prototype dan memiliki limitasi*", styles={'font-size': '12px', 'color': '#888', 'margin': '0 10px'})
+    bottom_disclaimer = pn.pane.Markdown("*Mungkin bisa memberikan jawaban yang salah*", align="center", styles={'font-size': '11px', 'color': '#aaa'})
 
     return pn.Column(
-        pn.pane.Markdown("## 👩‍💻 Kofu-chan, AI Assistant Comifuro"),
         top_warning,
         chat_interface,
         sample_questions_layout,

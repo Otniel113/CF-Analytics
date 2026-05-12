@@ -8,18 +8,21 @@ Bagian ini berisi aplikasi web utama untuk melakukan analisis data Comifuro seca
 - **Pandas**: Digunakan untuk manipulasi dan pemrosesan data (tabel master).
 - **Tabulator**: Extension Panel untuk tampilan tabel yang lebih canggih (sorting, filtering).
 - **Plotly**: Library visualisasi data interaktif untuk EDA dan Trend Analysis.
-- **Scipy**: Digunakan untuk perhitungan statistik dan jarak (Jaccard Distance).
 - **Joblib/Pickle**: Digunakan untuk memuat data pre-processed dan pipeline machine learning (`.pkl`).
+- **Scikit Learn dan Scipy**: Model statistik dan machine learning.
+- **Gemini API dan Google GenAI SDK**: Model untuk Chatbot.
 
 ## Struktur Folder & File
-- `app.py`: File utama aplikasi dashboard.
-- `tabs/`: Folder berisi modul-modul utama untuk setiap tab aplikasi.
-- `tabs/subtabs/`: Folder berisi komponen modular/sub-tab (seperti Recommendation & Returning Circle).
-- `pipelines/`: Folder berisi model machine learning yang sudah dilatih.
-- `requirements.txt`: Daftar dependensi Python yang dibutuhkan.
-- `data/`: Folder yang berisi data yang sudah diproses (misalnya `df_cf.pkl`).
 - `assets/`: Folder berisi aset statis seperti CSS dan gambar.
+- `chatbot/`: Folder berisi chatbot dan model.
+- `data/`: Folder yang berisi data yang sudah diproses.
+- `pipelines/`: Folder berisi model machine learning yang sudah dilatih.
+- `tabs/`: Folder berisi modul-modul utama untuk setiap tab aplikasi.
+- `tabs/subtabs/`: Folder berisi komponen modular/sub-tab.
 - `templates/`: Struktur HTML utama menggukanakn format Jinja.
+- `app.py`: File utama aplikasi dashboard.
+- `.env.example`: Template environment variables.
+- `requirements.txt`: Daftar dependensi Python yang dibutuhkan.
 
 ## Instalasi & Cara Menjalankan
 
@@ -35,11 +38,7 @@ Bagian ini berisi aplikasi web utama untuk melakukan analisis data Comifuro seca
    ```
 
 3. **Set Up Environment Variables:**
-   Salin file `.env.example` menjadi `.env` dan masukkan API Key Gemini Anda:
-   ```powershell
-   copy ..\.env.example ..\.env
-   ```
-   Buka file `.env` di root folder dan update nilainya:
+   Salin file `.env.example` menjadi `.env`. Buka file `.env` dan update nilainya:
    ```env
    GEMINI_API_KEY=your_actual_key_here
    GEMINI_MODEL_ID=gemini-3.1-flash-lite
