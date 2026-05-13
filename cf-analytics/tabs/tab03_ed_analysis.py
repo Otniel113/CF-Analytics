@@ -129,18 +129,18 @@ def create_tab(df=None):
         pn.pane.HTML("<h2 style='color: #2c3e50; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px;'>Exploratory Data Analysis</h2>"),
         total_booths_pane,
         pn.layout.Divider(),
-        pn.Row(
-            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Fandom Distribution</h3>"), fandom_tabs, sizing_mode='stretch_width'),
-            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Circle Type</h3>"), ctype_tabs, sizing_mode='stretch_width')
+        pn.FlexBox(
+            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Fandom Distribution</h3>"), fandom_tabs, min_width=300, sizing_mode='stretch_width'),
+            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Circle Type</h3>"), ctype_tabs, min_width=300, sizing_mode='stretch_width')
         ),
-        pn.Row(
-            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Rating</h3>"), rating_tabs, sizing_mode='stretch_width'),
-            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Day</h3>"), day_tabs, sizing_mode='stretch_width')
+        pn.FlexBox(
+            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Rating</h3>"), rating_tabs, min_width=300, sizing_mode='stretch_width'),
+            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Day</h3>"), day_tabs, min_width=300, sizing_mode='stretch_width')
         ),
         pn.layout.Divider(),
-        pn.Row(
-            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Social Media & Links</h3>"), links_tabs, sizing_mode='stretch_width'),
-            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>What They Sell</h3>"), sells_tabs, sizing_mode='stretch_width')
+        pn.FlexBox(
+            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Social Media & Links</h3>"), links_tabs, min_width=300, sizing_mode='stretch_width'),
+            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>What They Sell</h3>"), sells_tabs, min_width=300, sizing_mode='stretch_width')
         ),
         sizing_mode="stretch_width",
         margin=(20, 20)

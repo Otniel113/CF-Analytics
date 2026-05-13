@@ -106,3 +106,69 @@
     font-size: 0.85rem !important;
     /* Make font slightly smaller */
 }
+
+/* Make tabs scrollable on small screens globally */
+.bk-tabs-header {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none; /* Firefox */
+}
+.bk-tabs-header::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+.bk-tab {
+    white-space: nowrap !important;
+}
+
+.content-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+/* Responsive adjustments for Mobile */
+@media (max-width: 768px) {
+    .content-container {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    #chatbot-container {
+        width: 90vw;
+        height: 80vh;
+        bottom: 80px;
+        right: 5vw;
+    }
+
+    #floating-chat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        bottom: 15px;
+        right: 15px;
+    }
+
+    /* Font size scaling for readability on mobile without zooming */
+    h1, .h1 {
+        font-size: 1.8rem !important;
+    }
+    h2, .h2 {
+        font-size: 1.5rem !important;
+    }
+    h3, .h3 {
+        font-size: 1.3rem !important;
+    }
+    p, span, div {
+        font-size: 1rem !important;
+    }
+    .tabulator {
+        font-size: 1rem !important; /* Increase table font size on mobile */
+    }
+    .bk-btn {
+        font-size: 1rem !important;
+    }
+    .bk-input {
+        font-size: 1rem !important;
+    }
+}

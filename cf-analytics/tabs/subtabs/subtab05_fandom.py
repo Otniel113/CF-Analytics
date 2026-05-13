@@ -164,9 +164,9 @@ def create_fandom_trend_subtab(df):
         
         return pn.Column(
             pn.pane.HTML(search_metrics_html, sizing_mode='stretch_width'),
-            pn.Row(
-                pn.pane.Plotly(fig_f_pct, sizing_mode='stretch_width'),
-                pn.pane.Plotly(fig_f_count, sizing_mode='stretch_width'),
+            pn.FlexBox(
+                pn.pane.Plotly(fig_f_pct, min_width=300, sizing_mode='stretch_width'),
+                pn.pane.Plotly(fig_f_count, min_width=300, sizing_mode='stretch_width'),
                 sizing_mode='stretch_width'
             ),
             sizing_mode='stretch_width'
@@ -184,9 +184,9 @@ def create_fandom_trend_subtab(df):
     return pn.Column(
         total_booths_pane,
         pn.layout.Divider(),
-        pn.Row(
-            pn.Column(pane_pct, sizing_mode='stretch_width'),
-            pn.Column(pane_count, sizing_mode='stretch_width')
+        pn.FlexBox(
+            pn.Column(pane_pct, min_width=300, sizing_mode='stretch_width'),
+            pn.Column(pane_count, min_width=300, sizing_mode='stretch_width')
         ),
         pn.layout.Divider(),
         search_section,

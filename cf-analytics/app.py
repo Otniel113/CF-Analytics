@@ -57,6 +57,13 @@ main_tab_stylesheet = """
     font-weight: 700 !important;
     border-radius: 10px 10px 0 0 !important;
 }
+
+@media (max-width: 768px) {
+    .bk-tab {
+        font-size: 1.1rem !important;
+        padding: 10px 15px !important;
+    }
+}
 """
 
 # The Main Tabs for the whole application
