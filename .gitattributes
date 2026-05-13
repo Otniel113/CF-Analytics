@@ -1,0 +1,2 @@
+cf-analytics/pipelines/prediksi_rating_pipeline.pkl filter=lfs diff=lfs merge=lfs -text
+notebooks/results_export/prediksi_rating_pipeline.pkl filter=lfs diff=lfs merge=lfs -text
