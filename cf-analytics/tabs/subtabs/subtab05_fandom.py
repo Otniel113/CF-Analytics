@@ -164,10 +164,10 @@ def create_fandom_trend_subtab(df):
         
         return pn.Column(
             pn.pane.HTML(search_metrics_html, sizing_mode='stretch_width'),
-            pn.FlexBox(
-                pn.pane.Plotly(fig_f_pct, min_width=300, sizing_mode='stretch_width'),
-                pn.pane.Plotly(fig_f_count, min_width=300, sizing_mode='stretch_width'),
-                sizing_mode='stretch_width'
+            pn.Row(
+                pn.Column(pn.pane.Plotly(fig_f_pct, sizing_mode='stretch_width'), css_classes=['col-12', 'col-lg-6']),
+                pn.Column(pn.pane.Plotly(fig_f_count, sizing_mode='stretch_width'), css_classes=['col-12', 'col-lg-6']),
+                sizing_mode='stretch_width', css_classes=['row']
             ),
             sizing_mode='stretch_width'
         )
@@ -184,9 +184,10 @@ def create_fandom_trend_subtab(df):
     return pn.Column(
         total_booths_pane,
         pn.layout.Divider(),
-        pn.FlexBox(
-            pn.Column(pane_pct, min_width=300, sizing_mode='stretch_width'),
-            pn.Column(pane_count, min_width=300, sizing_mode='stretch_width')
+        pn.Row(
+            pn.Column(pane_pct, sizing_mode='stretch_width', css_classes=['col-12', 'col-lg-6']),
+            pn.Column(pane_count, sizing_mode='stretch_width', css_classes=['col-12', 'col-lg-6']),
+            css_classes=['row']
         ),
         pn.layout.Divider(),
         search_section,

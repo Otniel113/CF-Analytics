@@ -103,9 +103,9 @@ def get_rating_content(df=None, current_dir=None):
         fig2.update_layout(margin=dict(t=50, b=20, l=10, r=10), title_x=0.5)
 
         return pn.Row(
-            pn.pane.Plotly(fig1, sizing_mode="stretch_width", height=350),
-            pn.pane.Plotly(fig2, sizing_mode="stretch_width", height=350),
-            sizing_mode="stretch_width",
+            pn.Column(pn.pane.Plotly(fig1, sizing_mode="stretch_width", height=350), css_classes=['col-12', 'col-lg-6']),
+            pn.Column(pn.pane.Plotly(fig2, sizing_mode="stretch_width", height=350), css_classes=['col-12', 'col-lg-6']),
+            sizing_mode="stretch_width", css_classes=['row']
         )
 
     keterangan = pn.pane.HTML("""
@@ -228,9 +228,9 @@ def get_rating_content(df=None, current_dir=None):
             pn.layout.Divider(),
             pn.pane.HTML("<h2 style='color: #2c3e50; margin-bottom: 5px;'>Prediksi Rating</h2>"),
             pn.Row(
-                pn.Column(pn.Row(pn.Column(*left_toggles, sizing_mode="stretch_width"), pn.Column(*right_toggles, sizing_mode="stretch_width"), sizing_mode="stretch_width"), sizing_mode="stretch_width"),
-                pn.Column(prediction_output, width=280, margin=(0, 0, 0, 20)),
-                sizing_mode="stretch_width"
+                pn.Column(pn.Row(pn.Column(*left_toggles, sizing_mode="stretch_width", css_classes=['col-12', 'col-md-6']), pn.Column(*right_toggles, sizing_mode="stretch_width", css_classes=['col-12', 'col-md-6']), sizing_mode="stretch_width", css_classes=['row']), sizing_mode="stretch_width", css_classes=['col-12', 'col-lg-8']),
+                pn.Column(prediction_output, margin=(0, 0, 0, 20), css_classes=['col-12', 'col-lg-4']),
+                sizing_mode="stretch_width", css_classes=['row']
             ),
             pn.pane.HTML("""
                 <div style="background-color: #f8f9fa; border-left: 5px solid #28a745; padding: 15px; border-radius: 4px; margin-top: 15px;">

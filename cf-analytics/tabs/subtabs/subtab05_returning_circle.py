@@ -142,14 +142,15 @@ Mencari tahu apakah returning circle adalah fandom karbit atau bukan. Ada 3 kate
         total_booths_pane,
         ret_info_pane,
         pn.layout.Divider(),
-        pn.FlexBox(
-            pn.Column(pane_upg, desc_upg, min_width=300, sizing_mode='stretch_width'),
-            pn.Column(pane_karbit, desc_karbit, min_width=300, sizing_mode='stretch_width'),
-            pn.Column(pane_diver, desc_diver, min_width=300, sizing_mode='stretch_width')
+        pn.Row(
+            pn.Column(pane_upg, desc_upg, sizing_mode='stretch_width', css_classes=['col-12', 'col-lg-4']),
+            pn.Column(pane_karbit, desc_karbit, sizing_mode='stretch_width', css_classes=['col-12', 'col-lg-4']),
+            pn.Column(pane_diver, desc_diver, sizing_mode='stretch_width', css_classes=['col-12', 'col-lg-4']),
+            css_classes=['row']
         ),
         pn.layout.Divider(),
         pn.pane.HTML("<h3 style='color: #495057; margin-bottom: 15px;'>Returning Circles Data</h3>"),
-        pn.FlexBox(search_input_ret, filter_upgrade, filter_fandom, filter_diver, page_size_selector_ret, sizing_mode='stretch_width'),
+        pn.Row(search_input_ret, filter_upgrade, filter_fandom, filter_diver, page_size_selector_ret, sizing_mode='stretch_width', css_classes=['row']),
         ret_table,
         sizing_mode='stretch_width'
     )

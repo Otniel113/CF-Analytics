@@ -156,16 +156,18 @@ def create_tab(df):
     )
 
     # Row 1: Search and General
-    row1 = pn.FlexBox(search_block, general_block, sizing_mode="stretch_width", flex_wrap='wrap')
+    search_block.css_classes = ['col-12', 'col-lg-6']
+    general_block.css_classes = ['col-12', 'col-lg-6']
+    row1 = pn.Row(search_block, general_block, sizing_mode="stretch_width", css_classes=['row'])
 
     # Row 2: Sells (2 cols), Social (1 col), Fandom (1 col)
     # We use flex styles to give Sells more space (2:1:1 ratio)
-    row2 = pn.FlexBox(
-        pn.Column(social_block, styles={'flex': '1'}, min_width=300),
-        pn.Column(sells_block, styles={'flex': '2'}, min_width=300),
-        pn.Column(fandom_block, styles={'flex': '1'}, min_width=300),
+    row2 = pn.Row(
+        pn.Column(social_block, css_classes=['col-12', 'col-lg-3']),
+        pn.Column(sells_block, css_classes=['col-12', 'col-lg-6']),
+        pn.Column(fandom_block, css_classes=['col-12', 'col-lg-3']),
         sizing_mode="stretch_width",
-        flex_wrap='wrap'
+        css_classes=['row', 'mt-3']
     )
 
     tab_stylesheet = """

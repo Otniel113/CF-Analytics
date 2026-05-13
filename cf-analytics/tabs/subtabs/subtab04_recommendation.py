@@ -243,9 +243,12 @@ def create_recommendation_subtab(df):
         search_input.param.watch(lambda e: execute_search(), 'value')
         top_n_selector.param.watch(lambda e: execute_search() if search_input.value else None, 'value')
 
+        search_input.css_classes = ['col-12', 'col-lg-8']
+        btn_search.css_classes = ['col-12', 'col-lg-4', 'mt-2', 'mt-lg-0']
+        top_n_selector.css_classes = ['col-12', 'col-lg-4']
         return pn.Column(
-            pn.Row(search_input, btn_search, align='end', sizing_mode="stretch_width"),
-            pn.Row(top_n_selector, sizing_mode="stretch_width"),
+            pn.Row(search_input, btn_search, sizing_mode="stretch_width", css_classes=['row', 'align-items-end']),
+            pn.Row(top_n_selector, sizing_mode="stretch_width", css_classes=['row', 'mt-3']),
             results_pane,
             sizing_mode="stretch_width",
             margin=(15, 0)

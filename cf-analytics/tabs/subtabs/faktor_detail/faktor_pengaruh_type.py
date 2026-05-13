@@ -101,7 +101,7 @@ def get_type_content(df=None, current_dir=None):
         counts2 = df_valid.groupby(['Feature_Value', target_col]).size().reset_index(name='Count')
         fig2 = px.bar(counts2, y='Feature_Value', x='Count', color=target_col, orientation='h', title=f"Komposisi Tipe Booth pada '{selected_feature}'", color_discrete_map=circle_color_map, barmode='stack', category_orders={'Feature_Value': ['0', '1'], target_col: list(circle_color_map.keys())})
         
-        return pn.Row(pn.pane.Plotly(fig1, sizing_mode="stretch_width", height=350), pn.pane.Plotly(fig2, sizing_mode="stretch_width", height=350), sizing_mode="stretch_width")
+        return pn.Row(pn.Column(pn.pane.Plotly(fig1, sizing_mode="stretch_width", height=350), css_classes=['col-12', 'col-lg-6']), pn.Column(pn.pane.Plotly(fig2, sizing_mode="stretch_width", height=350), css_classes=['col-12', 'col-lg-6']), sizing_mode="stretch_width", css_classes=['row'])
 
     type_content = pn.Column(
         type_desc, plot_pane, keterangan, pn.layout.Divider(), coef_pane, pn.layout.Divider(),
@@ -210,9 +210,9 @@ def get_type_content(df=None, current_dir=None):
             pn.layout.Divider(),
             pn.pane.HTML("<h2 style='color: #2c3e50; margin-bottom: 5px;'>Prediksi Tipe Booth</h2>"),
             pn.Row(
-                pn.Column(pn.Row(pn.Column(*left_toggles, sizing_mode="stretch_width"), pn.Column(*right_toggles, sizing_mode="stretch_width"), sizing_mode="stretch_width"), sizing_mode="stretch_width"),
-                pn.Column(prediction_output, width=280, margin=(0, 0, 0, 20)),
-                sizing_mode="stretch_width"
+                pn.Column(pn.Row(pn.Column(*left_toggles, sizing_mode="stretch_width", css_classes=['col-12', 'col-md-6']), pn.Column(*right_toggles, sizing_mode="stretch_width", css_classes=['col-12', 'col-md-6']), sizing_mode="stretch_width", css_classes=['row']), sizing_mode="stretch_width", css_classes=['col-12', 'col-lg-8']),
+                pn.Column(prediction_output, margin=(0, 0, 0, 20), css_classes=['col-12', 'col-lg-4']),
+                sizing_mode="stretch_width", css_classes=['row']
             ),
             pn.pane.HTML("""
                 <div style="background-color: #f8f9fa; border-left: 5px solid #10b981; padding: 15px; border-radius: 4px; margin-top: 15px;">
