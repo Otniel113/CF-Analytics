@@ -151,24 +151,25 @@
 
     /* Font size scaling for readability on mobile without zooming */
     h1, .h1 {
-        font-size: 1.8rem !important;
+        font-size: 2rem !important;
     }
     h2, .h2 {
-        font-size: 1.5rem !important;
+        font-size: 1.8rem !important;
     }
     h3, .h3 {
-        font-size: 1.3rem !important;
+        font-size: 1.5rem !important;
     }
     p, span, div {
-        font-size: 1rem !important;
+        font-size: 1.15rem !important;
+        line-height: 1.5 !important;
     }
     .tabulator {
-        font-size: 1rem !important; /* Increase table font size on mobile */
+        font-size: 1.15rem !important; /* Increase table font size on mobile */
     }
     .bk-btn {
-        font-size: 1rem !important;
+        font-size: 1.15rem !important;
     }
     .bk-input {
-        font-size: 1rem !important;
+        font-size: 1.15rem !important;
     }
 }
