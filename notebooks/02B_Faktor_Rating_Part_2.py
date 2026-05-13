@@ -206,7 +206,7 @@ print(f"Penalty Std Dev: {actual_full_penalties.std():.4f}")
 
 # Export the tuned model
 model_filename = 'prediksi_rating_pipeline.pkl'
-joblib.dump(rf_tuned, model_filename)
+joblib.dump(rf_tuned, model_filename, compress=3)
 print(f"Model successfully exported to {model_filename}")
 
 # --- How to use this pkl later ---
