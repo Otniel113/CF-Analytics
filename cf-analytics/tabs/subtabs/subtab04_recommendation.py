@@ -119,9 +119,9 @@ def create_recommendation_subtab(df):
         all_entries = df_rec[['circle_code', 'name']].drop_duplicates()
         options_list = []
         code_lookup = {}
-        for _, row in all_entries.iterrows():
-            code = str(row['circle_code']).strip() if pd.notna(row['circle_code']) else ''
-            name = str(row['name']).strip() if pd.notna(row['name']) else ''
+        for row in all_entries.itertuples(index=False):
+            code = str(row.circle_code).strip() if pd.notna(row.circle_code) else ''
+            name = str(row.name).strip() if pd.notna(row.name) else ''
             by_code = f"{code} ~ {name}"; options_list.append(by_code); code_lookup[by_code] = code
             by_name = f"{name} ~ {code}"; options_list.append(by_name); code_lookup[by_name] = code
 
@@ -167,19 +167,25 @@ def create_recommendation_subtab(df):
             target_row = df_v[target_mask].iloc[0]
 
             def render_circle_card(row, distance=None):
-                code = row['circle_code'] if pd.notna(row['circle_code']) else '-'
-                img_url = row['circle_cut'] if pd.notna(row['circle_cut']) and str(row['circle_cut']).startswith('http') else 'https://via.placeholder.com/60?text=No+Img'
+                row_circle_code = getattr(row, 'circle_code')
+                code = row_circle_code if pd.notna(row_circle_code) else '-'
+                
+                row_circle_cut = getattr(row, 'circle_cut')
+                img_url = row_circle_cut if pd.notna(row_circle_cut) and str(row_circle_cut).startswith('http') else 'https://via.placeholder.com/60?text=No+Img'
                 
                 # Combine Fandom
                 fandom_list = []
-                if pd.notna(row['fandom']) and str(row['fandom']).strip(): fandom_list.append(str(row['fandom']).strip())
-                if pd.notna(row['other_fandom']) and str(row['other_fandom']).strip(): fandom_list.append(str(row['other_fandom']).strip())
+                row_fandom = getattr(row, 'fandom')
+                if pd.notna(row_fandom) and str(row_fandom).strip(): fandom_list.append(str(row_fandom).strip())
+                
+                row_other_fandom = getattr(row, 'other_fandom')
+                if pd.notna(row_other_fandom) and str(row_other_fandom).strip(): fandom_list.append(str(row_other_fandom).strip())
                 fandom_str = ", ".join(fandom_list) if fandom_list else "-"
 
                 # Extract Works Type
                 works_list = []
                 for col in sells_cols:
-                    if row[col] == 1:
+                    if getattr(row, col) == 1:
                         works_list.append(col.replace('Sells', ''))
                 works_str = ", ".join(works_list) if works_list else "-"
 
@@ -202,13 +208,13 @@ def create_recommendation_subtab(df):
                         {code}
                     </div>
                     <div style="flex: 1 1 180px; font-weight: 700; color: #2c3e50; font-size: 1.1rem;">
-                        {row['name']}
+                        {getattr(row, 'name')}
                     </div>
                     <div style="flex: 2 1 350px; display: flex; flex-direction: column; gap: 4px; font-size: 0.9rem; color: #6c757d;">
                         <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                            <div>📅 <span style="color: #343a40; font-weight: 600;">{row['day']}</span></div>
-                            <div>🚦 <span style="color: #343a40; font-weight: 600;">{row['rating']}</span></div>
-                            <div>🏢 <span style="color: #343a40; font-weight: 600;">{row['circle_type']}</span></div>
+                            <div>📅 <span style="color: #343a40; font-weight: 600;">{getattr(row, 'day')}</span></div>
+                            <div>🚦 <span style="color: #343a40; font-weight: 600;">{getattr(row, 'rating')}</span></div>
+                            <div>🏢 <span style="color: #343a40; font-weight: 600;">{getattr(row, 'circle_type')}</span></div>
                         </div>
                         <div style="margin-top: 1px;">🎨 <span style="color: #495057; font-weight: 600;">Fandom:</span> <span style="color: #212529;">{fandom_str}</span></div>
                         <div>📚 <span style="color: #495057; font-weight: 600;">Works Type:</span> <span style="color: #212529;">{works_str}</span></div>
@@ -230,8 +236,8 @@ def create_recommendation_subtab(df):
             final_html += '<div>'
             final_html += '<h3 style="color: #2c3e50; margin-bottom: 10px; font-size: 1.2rem;">Rekomendasi Sirkel yang Mirip:</h3>'
             final_html += '<div style="display: flex; flex-direction: column; gap: 12px;">'
-            for _, row in res_full.iterrows():
-                final_html += render_circle_card(row, distance=row['distance'])
+            for row in res_full.itertuples(index=False):
+                final_html += render_circle_card(row, distance=row.distance)
             final_html += '</div></div>'
             
             final_html += '</div>'

@@ -1,6 +1,4 @@
 import panel as pn
-import pandas as pd
-import os
 
 # Import subtabs
 from .subtabs.subtab04_recommendation import create_recommendation_subtab
