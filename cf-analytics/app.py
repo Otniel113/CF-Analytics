@@ -45,12 +45,18 @@ def create_app():
         border-radius: 12px 12px 0 0 !important;
     }
     .bk-tab {
-        font-size: 1.3rem !important;
-        padding: 15px 30px !important;
+        font-size: 1.1rem !important;
+        padding: 12px 20px !important;
         font-weight: 600 !important;
         border: none !important;
         background: transparent !important;
         color: #495057 !important;
+    }
+    @media (max-width: 768px) {
+        .bk-tab {
+            padding: 10px 12px !important;
+            font-size: 0.9rem !important;
+        }
     }
     .bk-tab.bk-active {
         background-color: #ffffff !important;
@@ -64,7 +70,7 @@ def create_app():
     main_tabs = pn.Tabs(
         ('Home', tab01_home.create_tab()),
         ('Master Data', tab02_master_data.create_tab(df)),
-        ('Exploratory Data Analysis', tab03_ed_analysis.create_tab(df)),
+        ('EDA', tab03_ed_analysis.create_tab(df)),
         ('Advanced Analysis', tab04_advanced_analysis.create_tab(df)),
         ('Trend Analysis', tab05_trend_analysis.create_tab(df, df_returning)),
         dynamic=True, # Only renders the tab when clicked, saving performance

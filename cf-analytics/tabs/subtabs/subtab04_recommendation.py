@@ -250,8 +250,17 @@ def create_recommendation_subtab(df):
         top_n_selector.param.watch(lambda e: execute_search() if search_input.value else None, 'value')
 
         return pn.Column(
-            pn.Row(search_input, btn_search, align='end', sizing_mode="stretch_width"),
-            pn.Row(top_n_selector, sizing_mode="stretch_width"),
+            pn.FlexBox(
+                pn.Column(search_input, min_width=300, styles={'flex': '1 1 300px'}),
+                pn.Column(btn_search, min_width=180, styles={'flex': '0 0 180px'}, align='end'),
+                sizing_mode="stretch_width",
+                justify_content='start'
+            ),
+            pn.FlexBox(
+                top_n_selector,
+                sizing_mode="stretch_width",
+                justify_content='start'
+            ),
             results_pane,
             sizing_mode="stretch_width",
             margin=(15, 0)

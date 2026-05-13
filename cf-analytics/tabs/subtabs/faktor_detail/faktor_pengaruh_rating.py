@@ -48,7 +48,7 @@ def get_rating_content(df=None, current_dir=None):
     )
 
     fig.update_layout(
-        margin=dict(t=50, b=0, l=0, r=80),
+        margin=dict(t=60, b=0, l=0, r=80),
         title_x=0.5,
         xaxis_title="Importance Score",
         yaxis_title="Feature",
@@ -84,7 +84,7 @@ def get_rating_content(df=None, current_dir=None):
             barmode='stack',
             category_orders={'rating': ['GA', 'PG', 'M'], 'Feature_Value': ['0', '1']}
         )
-        fig1.update_layout(margin=dict(t=50, b=20, l=10, r=10), title_x=0.5)
+        fig1.update_layout(margin=dict(t=60, b=20, l=10, r=10), title_x=0.5)
 
         # Plot 2: Y=Feature_Value, Stack=Rating
         counts2 = df_valid.groupby(['Feature_Value', 'rating']).size().reset_index(name='Count')
@@ -100,12 +100,13 @@ def get_rating_content(df=None, current_dir=None):
             barmode='stack',
             category_orders={'Feature_Value': ['0', '1'], 'rating': ['GA', 'PG', 'M']}
         )
-        fig2.update_layout(margin=dict(t=50, b=20, l=10, r=10), title_x=0.5)
+        fig2.update_layout(margin=dict(t=60, b=20, l=10, r=10), title_x=0.5)
 
-        return pn.Row(
-            pn.pane.Plotly(fig1, sizing_mode="stretch_width", height=350),
-            pn.pane.Plotly(fig2, sizing_mode="stretch_width", height=350),
+        return pn.FlexBox(
+            pn.pane.Plotly(fig1, sizing_mode="stretch_width", min_width=350, styles={'flex': '1 1 45%'}, height=350),
+            pn.pane.Plotly(fig2, sizing_mode="stretch_width", min_width=350, styles={'flex': '1 1 45%'}, height=350),
             sizing_mode="stretch_width",
+            justify_content='center'
         )
 
     keterangan = pn.pane.HTML("""
@@ -227,10 +228,12 @@ def get_rating_content(df=None, current_dir=None):
         prediction_section = pn.Column(
             pn.layout.Divider(),
             pn.pane.HTML("<h2 style='color: #2c3e50; margin-bottom: 5px;'>Prediksi Rating</h2>"),
-            pn.Row(
-                pn.Column(pn.Row(pn.Column(*left_toggles, sizing_mode="stretch_width"), pn.Column(*right_toggles, sizing_mode="stretch_width"), sizing_mode="stretch_width"), sizing_mode="stretch_width"),
-                pn.Column(prediction_output, width=280, margin=(0, 0, 0, 20)),
-                sizing_mode="stretch_width"
+            pn.FlexBox(
+                pn.Column(*left_toggles, sizing_mode="stretch_width", min_width=250, styles={'flex': '1 1 30%'}),
+                pn.Column(*right_toggles, sizing_mode="stretch_width", min_width=250, styles={'flex': '1 1 30%'}),
+                pn.Column(prediction_output, min_width=280, styles={'flex': '1 1 30%'}, margin=(10, 0)),
+                sizing_mode="stretch_width",
+                justify_content='center'
             ),
             pn.pane.HTML("""
                 <div style="background-color: #f8f9fa; border-left: 5px solid #28a745; padding: 15px; border-radius: 4px; margin-top: 15px;">

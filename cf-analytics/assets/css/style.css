@@ -1,50 +1,44 @@
-/* Base Data Columns (White) */
-.tabulator-cell[tabulator-field="No."],
-.tabulator-cell[tabulator-field="circle_code"],
-.tabulator-cell[tabulator-field="name"],
-.tabulator-cell[tabulator-field="fandom"],
-.tabulator-cell[tabulator-field="other_fandom"] {
-    background-color: #ffffff !important;
-}
-
-/* General Information Columns (Blue) */
+/* General Information Columns (Blue) - Semi-transparent to allow zebra striping */
 .tabulator-cell[tabulator-field="circle_type"],
 .tabulator-cell[tabulator-field="day"],
 .tabulator-cell[tabulator-field="rating"] {
-    background-color: #B0E0E6;
+    background-color: rgba(176, 224, 230, 0.6);
 }
 
-/* Social Media/Links Columns (Green) */
+/* Social Media/Links Columns (Green) - Semi-transparent to allow zebra striping */
 .tabulator-cell[tabulator-field="circle_facebook"],
 .tabulator-cell[tabulator-field="circle_instagram"],
 .tabulator-cell[tabulator-field="circle_twitter"],
 .tabulator-cell[tabulator-field="circle_other_socials"],
 .tabulator-cell[tabulator-field="marketplace_link"] {
-    background-color: #a3e4af;
+    background-color: rgba(163, 228, 175, 0.6);
 }
 
-/* Sells Columns (Red) - Uses wildcard to match any column starting with Sells */
+/* Sells Columns (Red) - Semi-transparent to allow zebra striping */
 .tabulator-cell[tabulator-field^="Sells"] {
-    background-color: #f8d7da;
+    background-color: rgba(248, 215, 218, 0.6);
 }
 
-/* Fandom Focus Columns (Yellow) */
+/* Fandom Focus Columns (Yellow) - Use semi-transparent to allow zebra striping */
 .tabulator-cell[tabulator-field="Hoyoverse"],
 .tabulator-cell[tabulator-field="Vtuber"],
 .tabulator-cell[tabulator-field="Other Gacha"],
 .tabulator-cell[tabulator-field="V-Synth"],
 .tabulator-cell[tabulator-field="Original"],
 .tabulator-cell[tabulator-field="Other (Niche)"] {
-    background-color: #fff3cd;
+    background-color: rgba(255, 243, 205, 0.8);
 }
 
 /* Floating Chatbot Widget Styling */
 #chatbot-container {
     position: fixed;
-    bottom: 100px; /* Above the floating icon */
+    bottom: 100px;
     right: 30px;
-    width: 450px;
-    height: 750px; /* Fixed height for the widget */
+    width: 380px;
+    /* Thinner for small laptops */
+    max-width: 90vw;
+    height: 750px;
+    max-height: calc(100vh - 160px);
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
@@ -52,7 +46,28 @@
     transition: transform 0.3s ease, opacity 0.3s ease;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Ensure rounded corners clip children */
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    #chatbot-container {
+        width: 90%;
+        right: 20px;
+        left: auto;
+        /* Remove centering, align to right */
+        bottom: 90px;
+        height: 80%;
+        /* Increased height for mobile */
+        max-height: 85vh;
+    }
+
+    #floating-chat-icon {
+        right: 20px;
+        bottom: 20px;
+        width: 55px;
+        height: 55px;
+        font-size: 26px;
+    }
 }
 
 .chatbot-hidden {

@@ -29,7 +29,7 @@ def create_tab():
         </ul>
 
         <h3 style="color: #e67e22; border-left: 6px solid #e67e22; padding-left: 20px; margin-bottom: 20px; font-size: 1.8rem;">Fitur di CF Analytics:</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
             <div style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
                 <strong style="font-size: 1.3rem; color: #d35400;">Master Data</strong><br><span style="font-size: 1.15rem;">Basis data seluruh booth di Comifuro. Bisa melakukan pencarian, filter, dan pengurutan.</span>
             </div>
@@ -51,6 +51,6 @@ def create_tab():
     
     return pn.Column(
         pn.pane.HTML(home_html),
-        styles={'padding': '40px', 'background': '#ffffff', 'border-radius': '20px', 'border': '1px solid #e0e0e0', 'box-shadow': '0 4px 20px rgba(0,0,0,0.08)'},
+        styles={'padding': '20px', 'background': '#ffffff', 'border-radius': '20px', 'border': '1px solid #e0e0e0', 'box-shadow': '0 4px 20px rgba(0,0,0,0.08)'},
         sizing_mode="stretch_width"
     )

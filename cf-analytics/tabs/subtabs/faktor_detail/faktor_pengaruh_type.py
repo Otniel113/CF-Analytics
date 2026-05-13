@@ -31,7 +31,7 @@ def get_type_content(df=None, current_dir=None):
     df_sorted = df_importance.sort_values(by='Importance', ascending=True)
     fig = px.bar(df_sorted, x='Importance', y='Feature', orientation='h', title="Faktor yang Mempengaruhi Tipe Booth Sirkel", template='ggplot2')
     fig.update_traces(marker_color='#f59e0b', texttemplate='%{x:.3f}', textposition='outside', cliponaxis=False)
-    fig.update_layout(margin=dict(t=50, b=0, l=0, r=80), title_x=0.5, xaxis_title="Importance Score", yaxis_title="Feature", height=500, yaxis={'categoryorder':'total ascending'})
+    fig.update_layout(margin=dict(t=60, b=0, l=0, r=80), title_x=0.5, xaxis_title="Importance Score", yaxis_title="Feature", height=500, yaxis={'categoryorder':'total ascending'})
     plot_pane = pn.pane.Plotly(fig, sizing_mode="stretch_width", height=500)
 
     # Coefficient Table
@@ -97,11 +97,18 @@ def get_type_content(df=None, current_dir=None):
         
         counts1 = df_valid.groupby([target_col, 'Feature_Value']).size().reset_index(name='Count')
         fig1 = px.bar(counts1, y=target_col, x='Count', color='Feature_Value', orientation='h', title=f"Distribusi '{selected_feature}' per Tipe Booth", color_discrete_map={'1': '#f59e0b', '0': '#94a3b8'}, barmode='stack', category_orders={target_col: list(circle_color_map.keys()), 'Feature_Value': ['0', '1']})
+        fig1.update_layout(margin=dict(t=60, b=20, l=10, r=10), title_x=0.5)
         
         counts2 = df_valid.groupby(['Feature_Value', target_col]).size().reset_index(name='Count')
         fig2 = px.bar(counts2, y='Feature_Value', x='Count', color=target_col, orientation='h', title=f"Komposisi Tipe Booth pada '{selected_feature}'", color_discrete_map=circle_color_map, barmode='stack', category_orders={'Feature_Value': ['0', '1'], target_col: list(circle_color_map.keys())})
+        fig2.update_layout(margin=dict(t=60, b=20, l=10, r=10), title_x=0.5)
         
-        return pn.Row(pn.pane.Plotly(fig1, sizing_mode="stretch_width", height=350), pn.pane.Plotly(fig2, sizing_mode="stretch_width", height=350), sizing_mode="stretch_width")
+        return pn.FlexBox(
+            pn.pane.Plotly(fig1, sizing_mode="stretch_width", min_width=350, styles={'flex': '1 1 45%'}, height=350),
+            pn.pane.Plotly(fig2, sizing_mode="stretch_width", min_width=350, styles={'flex': '1 1 45%'}, height=350),
+            sizing_mode="stretch_width",
+            justify_content='center'
+        )
 
     type_content = pn.Column(
         type_desc, plot_pane, keterangan, pn.layout.Divider(), coef_pane, pn.layout.Divider(),
@@ -209,10 +216,12 @@ def get_type_content(df=None, current_dir=None):
         prediction_section = pn.Column(
             pn.layout.Divider(),
             pn.pane.HTML("<h2 style='color: #2c3e50; margin-bottom: 5px;'>Prediksi Tipe Booth</h2>"),
-            pn.Row(
-                pn.Column(pn.Row(pn.Column(*left_toggles, sizing_mode="stretch_width"), pn.Column(*right_toggles, sizing_mode="stretch_width"), sizing_mode="stretch_width"), sizing_mode="stretch_width"),
-                pn.Column(prediction_output, width=280, margin=(0, 0, 0, 20)),
-                sizing_mode="stretch_width"
+            pn.FlexBox(
+                pn.Column(*left_toggles, sizing_mode="stretch_width", min_width=250, styles={'flex': '1 1 30%'}),
+                pn.Column(*right_toggles, sizing_mode="stretch_width", min_width=250, styles={'flex': '1 1 30%'}),
+                pn.Column(prediction_output, min_width=280, styles={'flex': '1 1 30%'}, margin=(10, 0)),
+                sizing_mode="stretch_width",
+                justify_content='center'
             ),
             pn.pane.HTML("""
                 <div style="background-color: #f8f9fa; border-left: 5px solid #10b981; padding: 15px; border-radius: 4px; margin-top: 15px;">

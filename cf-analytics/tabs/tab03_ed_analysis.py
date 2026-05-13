@@ -33,7 +33,7 @@ def create_tab(df=None):
         fig = px.pie(data, values=values_col, names=names_col, hole=0.4,
                      color_discrete_sequence=px.colors.qualitative.Pastel)
         fig.update_traces(textposition='inside', textinfo='percent+value')
-        fig.update_layout(margin=dict(t=30, b=0, l=0, r=0), title_text=title, title_x=0.5)
+        fig.update_layout(margin=dict(t=60, b=0, l=0, r=0), title_text=title, title_x=0.5)
         return pn.pane.Plotly(fig, sizing_mode='stretch_width')
 
     def create_bar_chart(data, title, x_col, y_col, total_booths, color_theme='blue'):
@@ -47,7 +47,7 @@ def create_tab(df=None):
         fig = px.bar(data, x=x_col, y=y_col, orientation='h', text='display_text')
         fig.update_traces(marker_color=color, textfont_size=12, textangle=0, textposition="outside", cliponaxis=False)
         # Added margin r=80 to ensure labels don't get cut off
-        fig.update_layout(margin=dict(t=30, b=0, l=0, r=80), title_text=title, title_x=0.5, yaxis={'categoryorder':'total ascending'})
+        fig.update_layout(margin=dict(t=60, b=0, l=0, r=80), title_text=title, title_x=0.5, yaxis={'categoryorder':'total ascending'})
         return pn.pane.Plotly(fig, sizing_mode='stretch_width')
 
     # 2. Fandom Distribution
@@ -129,18 +129,24 @@ def create_tab(df=None):
         pn.pane.HTML("<h2 style='color: #2c3e50; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-bottom: 20px;'>Exploratory Data Analysis</h2>"),
         total_booths_pane,
         pn.layout.Divider(),
-        pn.Row(
-            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Fandom Distribution</h3>"), fandom_tabs, sizing_mode='stretch_width'),
-            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Circle Type</h3>"), ctype_tabs, sizing_mode='stretch_width')
+        pn.FlexBox(
+            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Fandom Distribution</h3>"), fandom_tabs, min_width=350, styles={'flex': '1 1 45%'}),
+            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Circle Type</h3>"), ctype_tabs, min_width=350, styles={'flex': '1 1 45%'}),
+            justify_content='center',
+            sizing_mode='stretch_width'
         ),
-        pn.Row(
-            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Rating</h3>"), rating_tabs, sizing_mode='stretch_width'),
-            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Day</h3>"), day_tabs, sizing_mode='stretch_width')
+        pn.FlexBox(
+            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Rating</h3>"), rating_tabs, min_width=350, styles={'flex': '1 1 45%'}),
+            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Day</h3>"), day_tabs, min_width=350, styles={'flex': '1 1 45%'}),
+            justify_content='center',
+            sizing_mode='stretch_width'
         ),
         pn.layout.Divider(),
-        pn.Row(
-            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Social Media & Links</h3>"), links_tabs, sizing_mode='stretch_width'),
-            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>What They Sell</h3>"), sells_tabs, sizing_mode='stretch_width')
+        pn.FlexBox(
+            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>Social Media & Links</h3>"), links_tabs, min_width=350, styles={'flex': '1 1 45%'}),
+            pn.Column(pn.pane.HTML("<h3 style='text-align: center;'>What They Sell</h3>"), sells_tabs, min_width=350, styles={'flex': '1 1 45%'}),
+            justify_content='center',
+            sizing_mode='stretch_width'
         ),
         sizing_mode="stretch_width",
         margin=(20, 20)

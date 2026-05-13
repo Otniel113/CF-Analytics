@@ -65,10 +65,10 @@ def create_fandom_trend_subtab(df):
         title_x=0.5,
         yaxis_title="Percentage (%)",
         xaxis_title="Event",
-        margin=dict(t=50, b=30, l=30, r=30),
+        margin=dict(t=60, b=30, l=30, r=30),
         yaxis=dict(range=[0, df_trend['Percentage'].max() + 10])
     )
-    pane_pct = pn.pane.Plotly(fig_pct, sizing_mode='stretch_width', min_height=500)
+    pane_pct = pn.pane.Plotly(fig_pct, sizing_mode='stretch_width', min_height=500, styles={'flex': '1 1 45%'}, min_width=350)
 
     fig_count = px.line(df_trend, x='Event', y='Count', color='Fandom', markers=True, color_discrete_map=color_map)
     fig_count.update_traces(line=dict(width=4), marker=dict(size=12))
@@ -77,10 +77,10 @@ def create_fandom_trend_subtab(df):
         title_x=0.5,
         yaxis_title="Number of Booths",
         xaxis_title="Event",
-        margin=dict(t=50, b=30, l=30, r=30),
+        margin=dict(t=60, b=30, l=30, r=30),
         yaxis=dict(range=[0, df_trend['Count'].max() + 50])
     )
-    pane_count = pn.pane.Plotly(fig_count, sizing_mode='stretch_width', min_height=500)
+    pane_count = pn.pane.Plotly(fig_count, sizing_mode='stretch_width', min_height=500, styles={'flex': '1 1 45%'}, min_width=350)
 
     # ==========================================
     # SPECIFIC FANDOM SEARCH (ENHANCED/BIGGER)
@@ -156,18 +156,19 @@ def create_fandom_trend_subtab(df):
         
         fig_f_pct = px.line(f_trend_data, x='Event', y='Percentage', markers=True, color_discrete_sequence=['#8b5cf6'])
         fig_f_pct.update_traces(line=dict(width=5), marker=dict(size=14))
-        fig_f_pct.update_layout(title=f"Market Share Trend: {f_search}", yaxis_title="Percentage (%)", height=400, margin=dict(t=50, b=30, l=30, r=30))
+        fig_f_pct.update_layout(title=f"Market Share Trend: {f_search}", yaxis_title="Percentage (%)", height=400, margin=dict(t=60, b=30, l=30, r=30))
         
         fig_f_count = px.line(f_trend_data, x='Event', y='Count', markers=True, color_discrete_sequence=['#3b82f6'])
         fig_f_count.update_traces(line=dict(width=5), marker=dict(size=14))
-        fig_f_count.update_layout(title=f"Booth Count Trend: {f_search}", yaxis_title="Booths", height=400, margin=dict(t=50, b=30, l=30, r=30))
+        fig_f_count.update_layout(title=f"Booth Count Trend: {f_search}", yaxis_title="Booths", height=400, margin=dict(t=60, b=30, l=30, r=30))
         
         return pn.Column(
             pn.pane.HTML(search_metrics_html, sizing_mode='stretch_width'),
-            pn.Row(
-                pn.pane.Plotly(fig_f_pct, sizing_mode='stretch_width'),
-                pn.pane.Plotly(fig_f_count, sizing_mode='stretch_width'),
-                sizing_mode='stretch_width'
+            pn.FlexBox(
+                pn.pane.Plotly(fig_f_pct, sizing_mode='stretch_width', min_width=350, styles={'flex': '1 1 45%'}),
+                pn.pane.Plotly(fig_f_count, sizing_mode='stretch_width', min_width=350, styles={'flex': '1 1 45%'}),
+                sizing_mode='stretch_width',
+                justify_content='center'
             ),
             sizing_mode='stretch_width'
         )
@@ -184,9 +185,11 @@ def create_fandom_trend_subtab(df):
     return pn.Column(
         total_booths_pane,
         pn.layout.Divider(),
-        pn.Row(
-            pn.Column(pane_pct, sizing_mode='stretch_width'),
-            pn.Column(pane_count, sizing_mode='stretch_width')
+        pn.FlexBox(
+            pane_pct,
+            pane_count,
+            sizing_mode='stretch_width',
+            justify_content='center'
         ),
         pn.layout.Divider(),
         search_section,

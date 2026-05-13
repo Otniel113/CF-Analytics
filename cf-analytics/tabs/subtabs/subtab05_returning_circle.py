@@ -68,7 +68,7 @@ def create_returning_circle_subtab(df, df_returning):
     fig_upg = px.pie(upgrade_counts, values='Count', names='Status', hole=0.4,
                      color='Status', color_discrete_map=pie_colors,
                      title="Circle Booth Type Upgrade Status")
-    fig_upg.update_layout(margin=dict(t=50, b=30, l=10, r=10), title_x=0.5)
+    fig_upg.update_layout(margin=dict(t=60, b=30, l=10, r=10), title_x=0.5)
     pane_upg = pn.pane.Plotly(fig_upg, sizing_mode='stretch_width', min_height=400)
     desc_upg = pn.pane.Markdown("<p style='text-align:center; color:#6c757d; font-size:0.95rem; padding:0 20px;'>Mencari tahu apakah returning circle melakukan upgrade tipe circle booth atau tidak. Urutannya dari yang paling 'mewah' sampai 'sederhana' adalah Booth B > Booth A = 4 Space > 2 Space > 1 Space</p>")
     
@@ -78,7 +78,7 @@ def create_returning_circle_subtab(df, df_returning):
     fig_karbit = px.pie(karbit_counts, values='Count', names='Status', hole=0.4,
                         color='Status', color_discrete_map=pie_colors,
                         title="Karbit Detection")
-    fig_karbit.update_layout(margin=dict(t=50, b=30, l=10, r=10), title_x=0.5)
+    fig_karbit.update_layout(margin=dict(t=60, b=30, l=10, r=10), title_x=0.5)
     pane_karbit = pn.pane.Plotly(fig_karbit, sizing_mode='stretch_width', min_height=400)
     desc_karbit = pn.pane.Markdown("""<div style='color:#6c757d; font-size:0.95rem; padding:0 20px;'>
 Mencari tahu apakah returning circle adalah fandom karbit atau bukan. Ada 3 kategori:<br>
@@ -93,15 +93,15 @@ Mencari tahu apakah returning circle adalah fandom karbit atau bukan. Ada 3 kate
     fig_diver = px.pie(diver_counts, values='Count', names='Status', hole=0.4,
                        color='Status', color_discrete_map=pie_colors,
                        title="Product Diversification")
-    fig_diver.update_layout(margin=dict(t=50, b=30, l=10, r=10), title_x=0.5)
+    fig_diver.update_layout(margin=dict(t=60, b=30, l=10, r=10), title_x=0.5)
     pane_diver = pn.pane.Plotly(fig_diver, sizing_mode='stretch_width', min_height=400)
     desc_diver = pn.pane.Markdown("<p style='text-align:center; color:#6c757d; font-size:0.95rem; padding:0 20px;'>Mencari tahu banyaknya jumlah jenis produk yang dijual. Didapatkan dengan menghitung total kolom 'Sells'. Memiliki 3 kategori: Less Diverse (CF terbaru jenis produk lebih sedikit), Stay (jenis produk sama), More Diverse (jenis produk makin bertambah)</p>")
 
     # Table for df_returning
-    search_input_ret = pn.widgets.TextInput(name='Search by Circle Name', placeholder='Enter circle name...')
-    filter_upgrade = pn.widgets.Select(name='Filter by Upgrade Status', options=['All'] + list(df_returning['upgrade_status'].dropna().unique()), value='All')
-    filter_fandom = pn.widgets.Select(name='Filter by Fandom Loyalty', options=['All'] + list(df_returning['fandom_loyalty'].dropna().unique()), value='All')
-    filter_diver = pn.widgets.Select(name='Filter by Product Diversification', options=['All'] + list(df_returning['diver_status'].dropna().unique()), value='All')
+    search_input_ret = pn.widgets.TextInput(name='Search by Circle Name', placeholder='Enter circle name...', sizing_mode='stretch_width')
+    filter_upgrade = pn.widgets.Select(name='Upgrade', options=['All'] + list(df_returning['upgrade_status'].dropna().unique()), value='All', sizing_mode='stretch_width')
+    filter_fandom = pn.widgets.Select(name='Fandom', options=['All'] + list(df_returning['fandom_loyalty'].dropna().unique()), value='All', sizing_mode='stretch_width')
+    filter_diver = pn.widgets.Select(name='Product', options=['All'] + list(df_returning['diver_status'].dropna().unique()), value='All', sizing_mode='stretch_width')
     
     page_size_selector_ret = pn.widgets.Select(name='Show rows', options=[10, 25, 50], value=10, width=120)
     
@@ -142,14 +142,24 @@ Mencari tahu apakah returning circle adalah fandom karbit atau bukan. Ada 3 kate
         total_booths_pane,
         ret_info_pane,
         pn.layout.Divider(),
-        pn.Row(
-            pn.Column(pane_upg, desc_upg, sizing_mode='stretch_width'),
-            pn.Column(pane_karbit, desc_karbit, sizing_mode='stretch_width'),
-            pn.Column(pane_diver, desc_diver, sizing_mode='stretch_width')
+        pn.FlexBox(
+            pn.Column(pane_upg, desc_upg, min_width=350, styles={'flex': '1 1 30%'}),
+            pn.Column(pane_karbit, desc_karbit, min_width=350, styles={'flex': '1 1 30%'}),
+            pn.Column(pane_diver, desc_diver, min_width=350, styles={'flex': '1 1 30%'}),
+            justify_content='center',
+            sizing_mode='stretch_width'
         ),
         pn.layout.Divider(),
         pn.pane.HTML("<h3 style='color: #495057; margin-bottom: 15px;'>Returning Circles Data</h3>"),
-        pn.Row(search_input_ret, filter_upgrade, filter_fandom, filter_diver, page_size_selector_ret, sizing_mode='stretch_width'),
+        pn.FlexBox(
+            pn.Column(search_input_ret, min_width=200, styles={'flex': '1 1 18%'}),
+            pn.Column(filter_upgrade, min_width=200, styles={'flex': '1 1 18%'}),
+            pn.Column(filter_fandom, min_width=200, styles={'flex': '1 1 18%'}),
+            pn.Column(filter_diver, min_width=200, styles={'flex': '1 1 18%'}),
+            pn.Column(page_size_selector_ret, min_width=120, styles={'flex': '1 1 18%'}),
+            sizing_mode='stretch_width',
+            justify_content='start'
+        ),
         ret_table,
         sizing_mode='stretch_width'
     )
