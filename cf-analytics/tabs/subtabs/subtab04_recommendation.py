@@ -164,7 +164,9 @@ def create_recommendation_subtab(df):
 
             # Get target circle for display
             target_mask = (df_v['name'] == search_val) | (df_v['circle_code'] == search_val)
-            target_row = df_v[target_mask].iloc[0]
+            # Use itertuples to ensure target_row is a namedtuple, consistent with the recommendations loop
+            # and to avoid 'name' attribute conflict in pandas Series.
+            target_row = next(df_v[target_mask].itertuples(index=False))
 
             def render_circle_card(row, distance=None):
                 row_circle_code = getattr(row, 'circle_code')

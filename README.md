@@ -2,6 +2,10 @@
 
 Dashboard analitik lengkap untuk Comifuro (CF) mulai dari tabel master, visualisasi data, implementasi machine learning data science, sampai chatbot LLM.
 
+## Deployment
+
+CF-Analytics ini bisa langsung dikunjungi di: https://otnielabiezer-cf-analytics.hf.space/ .
+
 ## Deskripsi
 
 **CF (Comifuro) Analytics** adalah aplikasi berbasis web yang menyajikan data lengkap, visualisasi data, dan juga analisis data tentang informasi booth-booth yang ada di acara Comifuro (sekitar 1000 lebih). Comifuro sendiri adalah salah satu acara ACG (Anime, Comic, Game) terbesar di Indonesia. Data ini didapatkan dari website Catalog Comifuro. CF Analytics ini bisa menjadi landasan berbasis data untuk mengetahui tentang kebudayaan hobi ACG ini di Indonesia.
